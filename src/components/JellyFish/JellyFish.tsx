@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import "./JellyFish.css";
 
 import { useState } from "react";
@@ -13,9 +14,10 @@ export default function JellyFish() {
       animationDelay: `${Math.random() * 1.5}s`,
     }))
   );
+  const navigate = useNavigate();
 
   return (
-    <Box>
+    <Box className="jelly-container" onClick={() => navigate("/")}>
       <Box className="simon">
         <Box className="eyes" />
         <Box className="mouth" />

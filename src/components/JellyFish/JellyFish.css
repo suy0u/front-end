@@ -2,6 +2,10 @@
   --s: min(50px, 12vw);
 }
 
+.jelly-container {
+  cursor: pointer;
+}
+
 .simon {
   position: relative;
   width: var(--s);
