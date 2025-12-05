@@ -2,8 +2,8 @@ import { Box, Typography } from "@mui/material";
 
 import { ApiButtonGrid } from "../components/ApiButtonGrid";
 import { HealthCheckGrid } from "../components/HealthCheckGrid";
-import { BottomPanel } from "../components/BottomPanel";
-import { HeroSection } from "../components/HeroSection";
+import { BottomPanel } from "../components/HomePage/BottomPanel";
+import { HeroSection } from "../components/HomePage/HeroSection";
 
 const appName = import.meta.env.VITE_APP_NAME || "My App";
 

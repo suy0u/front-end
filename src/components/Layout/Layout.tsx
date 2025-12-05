@@ -1,7 +1,7 @@
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import type { ReactNode } from "react";
 import Navbar from "./Navbar";
-import { theme } from "./theme";
+import { theme } from "../../theme/theme";
 
 const Layout = ({ children }: { children: ReactNode }) => (
   <ThemeProvider theme={theme}>

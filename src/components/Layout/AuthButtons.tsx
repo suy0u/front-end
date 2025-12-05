@@ -1,10 +1,13 @@
-import { Box } from "@mui/material";
-import { ButtonUI } from "../ButtonUI";
+import { Box, Button } from "@mui/material";
 
 const AuthButtons = () => (
   <Box sx={{ display: "flex", gap: 1.5 }}>
-    <ButtonUI variant="signIn">Sign In</ButtonUI>
-    <ButtonUI variant="signUp">Sign Up</ButtonUI>
+    <Button size="sm" variant="signIn">
+      Sign In
+    </Button>
+    <Button size="sm" variant="signUp">
+      Sign Up
+    </Button>
   </Box>
 );
 

@@ -1,24 +1,19 @@
 import { Grid, Button } from "@mui/material";
-import {
-  purpleButton,
-  mintButton,
-  blueButton,
-} from "../styles/buttons/buttons";
 
 export const HealthCheckGrid = () => (
   <Grid container spacing={2}>
     <Grid size={{ xs: 12, sm: 6, md: "auto" }}>
-      <Button sx={purpleButton} fullWidth>
+      <Button size="md" variant="purple" fullWidth>
         App
       </Button>
     </Grid>
     <Grid size={{ xs: 12, sm: 6, md: "auto" }}>
-      <Button sx={mintButton} fullWidth>
+      <Button size="md" variant="mint" fullWidth>
         Redis
       </Button>
     </Grid>
     <Grid size={{ xs: 12, sm: 6, md: "auto" }}>
-      <Button sx={blueButton} fullWidth>
+      <Button size="md" variant="blue" fullWidth>
         DB
       </Button>
     </Grid>
