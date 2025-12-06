@@ -10,6 +10,7 @@ declare module "@mui/material/styles" {
       blue: string;
       green: string;
       dark: string;
+      yellow: string;
 
       signInBg: string;
       signInHover: string;
@@ -32,6 +33,8 @@ declare module "@mui/material/Button" {
     purple: true;
     mint: true;
     blue: true;
+    green: true;
+    yellow: true;
     signIn: true;
     signUp: true;
   }
@@ -40,5 +43,13 @@ declare module "@mui/material/Button" {
     sm: true;
     md: true;
     lg: true;
+  }
+}
+
+declare module "@mui/material/Paper" {
+  interface PaperPropsVariantOverrides {
+    companyCard: true;
+    userCard: true;
+    pageCard: true;
   }
 }
