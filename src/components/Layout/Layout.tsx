@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import Navbar from "./Navbar";
 import { theme } from "../../theme/theme";
 import { BottomPanel } from "../HomePage/BottomPanel";
-import { HealthCheckGrid } from "../HealthCheckGrid";
-import { ApiButtonGrid } from "../ApiButtonGrid";
+import { HealthCheckGrid } from "./HealthCheckGrid";
+import { ApiButtonGrid } from "./ApiButtonGrid";
 
 const Layout = ({ children }: { children: ReactNode }) => (
   <ThemeProvider theme={theme}>
