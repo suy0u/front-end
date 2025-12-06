@@ -22,10 +22,17 @@ export const FileTree = () => {
       <Typography variant="body2">{"/"}</Typography>
       <Typography
         variant="body2"
+        onClick={() => navigate("/users")}
+        sx={{ cursor: "pointer" }}
+      >
+        {"├─ users/"}
+      </Typography>
+      <Typography
+        variant="body2"
         onClick={() => navigate("/companies")}
         sx={{ cursor: "pointer" }}
       >
-        {"├─ company/"}
+        {"├─ companies/"}
       </Typography>
       <Typography variant="body2" sx={{ pl: 3 }}>
         {"├─ quiz/"}
@@ -35,13 +42,6 @@ export const FileTree = () => {
       </Typography>
       <Typography variant="body2" sx={{ pl: 3 }}>
         {"└─ notifications/"}
-      </Typography>
-      <Typography
-        variant="body2"
-        onClick={() => navigate("/users")}
-        sx={{ cursor: "pointer" }}
-      >
-        {"├─ users/"}
       </Typography>
     </Box>
   );
