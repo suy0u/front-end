@@ -1,6 +1,6 @@
-import { Box, Typography, Paper, Stack, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Box, Typography, Stack, Button } from "@mui/material";
 import { users } from "../../ mocks/users";
+import { DataCard } from "../../components/Cards/DataCard";
 
 export default function UsersListPage() {
   return (
@@ -13,39 +13,17 @@ export default function UsersListPage() {
       </Typography>
 
       <Stack spacing={2}>
-        {users.map((u) => (
-          <Paper
-            key={u.id}
-            component={Link}
-            to={`/users/${u.id}`}
-            elevation={0}
-            sx={{
-              p: 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderRadius: "20px",
-              bgcolor: "#E0FFE0",
-              textDecoration: "none",
-              color: "inherit",
-              "&:hover": { bgcolor: "#D6FFD6" },
-            }}
-          >
-            <Box>
-              <Typography sx={{ fontWeight: 700 }}>{u.name}</Typography>
-            </Box>
-
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: "#00A779",
-                "&:hover": { bgcolor: "#008F67" },
-                borderRadius: "12px",
-              }}
-            >
-              View
-            </Button>
-          </Paper>
+        {users.map((user) => (
+          <DataCard
+            title={user.name}
+            to={`/users/${user.id}`}
+            right={
+              <Button size="sm" variant="purple">
+                View
+              </Button>
+            }
+            paperProps={{ variant: "userCard" }}
+          />
         ))}
       </Stack>
     </Box>
