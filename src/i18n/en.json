@@ -1,0 +1,9 @@
+{
+  "app": {
+    "title": "MEET {{appName}} QUIZZES",
+    "users": "Users",
+    "companies": "Companies",
+    "view": "View",
+    "not_found": "Not found"
+  }
+}
