@@ -4,13 +4,15 @@ import { users } from "../../ mocks/users";
 import { companies } from "../../ mocks/companies";
 import { DataCard } from "../../components/Cards/DataCard";
 import { PageCard } from "../../components/Cards/PageCard";
+import { useTranslation } from "react-i18next";
 
 export default function CompanyProfilePage() {
   const { id } = useParams();
   const company = companies.find((c) => c.id === Number(id));
+  const { t } = useTranslation();
 
   if (!company) {
-    return <Typography>Company not found</Typography>;
+    return <Typography>{t("app.not_found")}</Typography>;
   }
 
   const companyUsers = users
@@ -30,7 +32,7 @@ export default function CompanyProfilePage() {
         </Typography>
 
         <Chip
-          label={`Users: ${userCount}`}
+          label={`${t("app.users")}: ${userCount}`}
           sx={{
             bgcolor: "#00A779",
             color: "white",
@@ -43,7 +45,7 @@ export default function CompanyProfilePage() {
       </PageCard>
 
       <Typography variant="h5" sx={{ fontWeight: 900, mb: 2 }}>
-        Users
+        {t("app.users")}
       </Typography>
 
       <Stack spacing={2}>
@@ -54,7 +56,7 @@ export default function CompanyProfilePage() {
             to={`/users/${user.id}`}
             right={
               <Button size="sm" variant="purple">
-                View
+                {t("app.view")}
               </Button>
             }
             paperProps={{ variant: "userCard" }}
@@ -64,7 +66,7 @@ export default function CompanyProfilePage() {
 
       {companyUsers.length === 0 && (
         <Typography sx={{ opacity: 0.7, mt: 2 }}>
-          No users found in this company.
+          {t("app.not_found")}
         </Typography>
       )}
     </Box>

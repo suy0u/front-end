@@ -4,12 +4,14 @@ import { users } from "../../ mocks/users";
 import { companies } from "../../ mocks/companies";
 import { DataCard } from "../../components/Cards/DataCard";
 import { PageCard } from "../../components/Cards/PageCard";
+import { useTranslation } from "react-i18next";
 
 export default function UserProfilePage() {
   const { id } = useParams();
   const user = users.find((u) => u.id === Number(id));
+  const { t } = useTranslation();
 
-  if (!user) return <Typography>User not found</Typography>;
+  if (!user) return <Typography>{t("app.not_found")}</Typography>;
 
   const companyRelations = user.companies ?? [];
   const companyCount = companyRelations.length;
@@ -22,7 +24,7 @@ export default function UserProfilePage() {
         </Typography>
 
         <Chip
-          label={`Companies: ${companyCount}`}
+          label={`${t("app.companies")}: ${companyCount}`}
           sx={{
             bgcolor: "#00A779",
             color: "white",
@@ -36,7 +38,7 @@ export default function UserProfilePage() {
       </PageCard>
 
       <Typography variant="h5" sx={{ fontWeight: 900, mb: 2 }}>
-        Companies
+        {t("app.companies")}
       </Typography>
 
       <Stack spacing={2}>
@@ -51,7 +53,7 @@ export default function UserProfilePage() {
               to={`/companies/${company.id}`}
               right={
                 <Button size="sm" variant="purple">
-                  View
+                  {t("app.view")}
                 </Button>
               }
               paperProps={{ variant: "companyCard" }}
