@@ -1,21 +1,22 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Box, Menu, MenuItem, Button } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { setLanguage } from "../../store/slices/languageSlice";
 
 export function LanguageSwitcher() {
-  const { i18n } = useTranslation();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const dispatch = useAppDispatch();
+  const lang = useAppSelector((s) => s.language.current);
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) =>
-    setAnchorEl(e.currentTarget as HTMLElement);
+    setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
   const changeLang = (lng: string) => {
-    i18n.changeLanguage(lng);
-    localStorage.setItem("lng", lng);
+    dispatch(setLanguage(lng));
     handleClose();
   };
 
@@ -27,7 +28,7 @@ export function LanguageSwitcher() {
         onClick={handleOpen}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        {i18n.language.toUpperCase()}
+        {lang.toUpperCase()}
       </Button>
 
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
