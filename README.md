@@ -18,13 +18,73 @@ Frontend application built with **React**, **TypeScript**, and **Material UI**.
 - `src/store` — global state (if needed)
 - `src/utils` — helper functions
 
-## Environment Variables
+Current example
+![image description](public/image.png)
 
-Create a `.env` file based on `.env.sample`:
+# Run Frontend with Docker
+
+## 1. Copy environment variables
 
 ```bash
 cp .env.sample .env
 ```
 
-Current example
-![image description](public/image.png)
+Edit values if needed (e.g. ports, app name).
+
+## 2. Build Docker image
+
+```bash
+docker compose build
+```
+
+## 3. Start the container
+
+```bash
+docker compose up
+```
+
+App will be available at:
+
+```
+http://localhost:3000
+```
+
+(or the port defined in `.env`)
+
+## 4. Stop the container
+
+```bash
+docker compose down
+```
+
+## 🧪 Run Locally
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Create .env file
+
+```bash
+cp .env.sample .env
+```
+
+Update values if needed.
+
+### 3. Start dev server
+
+```bash
+npm run dev
+```
+
+App will be available at:
+
+```
+http://localhost:5173
+```
+
+(or the port shown in terminal)
+
+---
