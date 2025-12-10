@@ -18,9 +18,6 @@ Frontend application built with **React**, **TypeScript**, and **Material UI**.
 - `src/store` — global state (if needed)
 - `src/utils` — helper functions
 
-Current example
-![image description](public/image.png)
-
 # Run Frontend with Docker
 
 ## 1. Copy environment variables
@@ -88,3 +85,20 @@ http://localhost:5173
 (or the port shown in terminal)
 
 ---
+
+Current examples
+
+### Home
+
+![Home](public/home_en.png)
+![Home](public/home_ua.png)
+
+### Users
+
+![Users](public/users.png)
+![User](public/user_info.png)
+
+### Companies
+
+![Users](public/companies.png)
+![User](public/company_info.png)

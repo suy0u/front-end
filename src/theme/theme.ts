@@ -166,6 +166,12 @@ export const theme = createTheme({
             backgroundColor: theme.palette.custom.green,
           }),
         },
+        {
+          props: { variant: "yellow" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.yellow,
+          }),
+        },
 
         {
           props: { variant: "signIn" },
@@ -194,6 +200,37 @@ export const theme = createTheme({
           }),
         },
       ],
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          borderRadius: "999px",
+          backgroundColor: theme.palette.custom.mint,
+          border: `2px solid ${theme.palette.custom.dark}`,
+          boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
+          overflow: "hidden",
+          padding: theme.spacing(0.5, 1),
+          marginTop: theme.spacing(1),
+
+          "& .MuiMenuItem-root": {
+            fontWeight: 700,
+            fontSize: 12,
+            textTransform: "uppercase",
+            borderRadius: "999px",
+            padding: theme.spacing(1, 2),
+            color: theme.palette.custom.dark,
+            transition: "all 0.15s ease",
+          },
+
+          "& .MuiMenuItem-root:hover": {
+            backgroundColor: theme.palette.custom.green,
+          },
+
+          "& .MuiMenuItem-root.Mui-selected": {
+            backgroundColor: theme.palette.custom.blue,
+          },
+        }),
+      },
     },
   },
 });

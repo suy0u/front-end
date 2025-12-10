@@ -1,6 +1,7 @@
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Toolbar, Box } from "@mui/material";
 import JellyFish from "../JellyFish/JellyFish";
 import AuthButtons from "./AuthButtons";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const Navbar = () => (
   <AppBar
@@ -23,7 +24,10 @@ const Navbar = () => (
       }}
     >
       <JellyFish />
-      <AuthButtons />
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <AuthButtons />
+        <LanguageSwitcher />
+      </Box>
     </Toolbar>
   </AppBar>
 );

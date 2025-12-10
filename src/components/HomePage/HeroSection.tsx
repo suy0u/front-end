@@ -1,11 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { FileTree } from "./FileTree";
+import { useTranslation } from "react-i18next";
 
 interface HeroSectionProps {
   appName: string;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ appName }) => {
+  const { t } = useTranslation();
+
   return (
     <Box
       sx={{
@@ -32,7 +35,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ appName }) => {
           color: "#14302A",
         }}
       >
-        MEET {appName} QUIZZES
+        {t("app.title", { appName })}
       </Typography>
 
       <FileTree />
