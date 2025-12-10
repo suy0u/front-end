@@ -19,6 +19,7 @@ export function LanguageSwitcher() {
     dispatch(setLanguage(lng));
     handleClose();
   };
+
   return (
     <Box>
       <Button
