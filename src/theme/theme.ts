@@ -13,6 +13,7 @@ export const theme = createTheme({
       blue: "#c9f6ff",
       green: "#ccf2d1",
       dark: "#1d5b4e",
+      yellow: "#FFE66D",
 
       signInBg: "#1C5F4A",
       signInHover: "#154538",
@@ -30,6 +31,45 @@ export const theme = createTheme({
   },
 
   components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 20,
+          boxShadow: "0px 4px 8px rgba(0,0,0,0.05)",
+        },
+      },
+      variants: [
+        {
+          props: { variant: "companyCard" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.blue,
+            "&:hover": {
+              backgroundColor: theme.palette.custom.blue,
+              opacity: 0.9,
+            },
+          }),
+        },
+        {
+          props: { variant: "userCard" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.green,
+            "&:hover": {
+              backgroundColor: theme.palette.custom.green,
+              opacity: 0.9,
+            },
+          }),
+        },
+        {
+          props: { variant: "pageCard" },
+          style: ({ theme }) => ({
+            borderRadius: 40,
+            padding: theme.spacing(4),
+            backgroundColor: theme.palette.custom.yellow,
+            boxShadow: "0px 10px 30px rgba(0,0,0,0.1)",
+          }),
+        },
+      ],
+    },
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
@@ -96,8 +136,6 @@ export const theme = createTheme({
             fontSize: 16,
           },
         },
-
-        // -------- colors --------
         {
           props: { variant: "pink" },
           style: ({ theme }) => ({
@@ -122,8 +160,13 @@ export const theme = createTheme({
             backgroundColor: theme.palette.custom.blue,
           }),
         },
+        {
+          props: { variant: "green" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.green,
+          }),
+        },
 
-        // -------- sign in --------
         {
           props: { variant: "signIn" },
           style: ({ theme }) => ({
@@ -135,8 +178,6 @@ export const theme = createTheme({
             },
           }),
         },
-
-        // -------- sign up --------
         {
           props: { variant: "signUp" },
           style: ({ theme }) => ({
