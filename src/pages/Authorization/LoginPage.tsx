@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Typography, Button } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { setToken, clearRedirect } from "../../store/slices/authSlice";
+import { setTokens, clearRedirect } from "../../store/slices/authSlice";
 import { login } from "../../api/authorization";
 import { handleApiError } from "../../utils/errorHandler";
 import { AuthCard } from "../../components/Authorization/AuthorizationCard";
 import { AuthTextField } from "../../components/Authorization/AuthorizationTextField";
 import TimedAlert from "../../components/Alerts/TimedAlert";
+import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButtons";
 
 export default function LoginPage() {
   const location = useLocation();
@@ -26,7 +27,9 @@ export default function LoginPage() {
 
     try {
       const data = await login(email, password);
-      dispatch(setToken(data.access_token));
+      dispatch(
+        setTokens({ access: data.access_token, refresh: data.refresh_token })
+      );
 
       if (redirectPath) {
         navigate(redirectPath);
@@ -72,6 +75,13 @@ export default function LoginPage() {
         <Button fullWidth size="lg" variant="green" type="submit">
           Login
         </Button>
+        <Typography
+          sx={{ textAlign: "center", mt: 3, fontWeight: 700, color: "#1d5b4e" }}
+        >
+          Or continue with
+        </Typography>
+
+        <SocialAuthButtons />
       </form>
     </AuthCard>
   );

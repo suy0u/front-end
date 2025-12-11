@@ -6,6 +6,7 @@ import { useState } from "react";
 import { registerUser } from "../../api/authorization";
 import { handleApiError } from "../../utils/errorHandler";
 import TimedAlert from "../../components/Alerts/TimedAlert";
+import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButtons";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -68,6 +69,13 @@ export default function RegisterPage() {
         <Button fullWidth size="lg" variant="purple" type="submit">
           Register
         </Button>
+        <Typography
+          sx={{ textAlign: "center", mt: 3, fontWeight: 700, color: "#1d5b4e" }}
+        >
+          Or continue with
+        </Typography>
+
+        <SocialAuthButtons />
       </form>
     </AuthCard>
   );
