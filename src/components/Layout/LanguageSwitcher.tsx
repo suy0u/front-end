@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Menu, MenuItem, Button } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setLanguage } from "../../store/slices/languageSlice";
+import i18n from "../../i18n";
 
 export function LanguageSwitcher() {
   const dispatch = useAppDispatch();
@@ -19,6 +20,10 @@ export function LanguageSwitcher() {
     dispatch(setLanguage(lng));
     handleClose();
   };
+
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+  }, [lang]);
 
   return (
     <Box>
