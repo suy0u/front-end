@@ -14,6 +14,7 @@ import {
   fetchUserById,
   updateUserThunk,
   deleteUserThunk,
+  uploadAvatarThunk,
 } from "../../store/slices/userSlice";
 import { logout } from "../../store/slices/authSlice";
 import { type UpdateUserPayload } from "../../types/user";
@@ -21,6 +22,8 @@ import { type UpdateUserPayload } from "../../types/user";
 interface EditUserData {
   username: string;
   password: string;
+  about: string;
+  avatar_url: string;
 }
 
 export default function UserProfilePage() {
@@ -39,6 +42,8 @@ export default function UserProfilePage() {
   const [editData, setEditData] = useState<EditUserData>({
     username: "",
     password: "",
+    about: "",
+    avatar_url: "",
   });
 
   useEffect(() => {
@@ -53,6 +58,8 @@ export default function UserProfilePage() {
     setEditData({
       username: user.username ?? "",
       password: user.password ?? "",
+      about: user.about ?? "",
+      avatar_url: user.avatar_url ?? "",
     });
 
     setEditMode(true);
@@ -63,6 +70,8 @@ export default function UserProfilePage() {
 
     const payload: UpdateUserPayload = {
       username: editData.username,
+      about: editData.about,
+      avatar_url: editData.avatar_url,
     };
 
     const passwordChanged = Boolean(editData.password);
@@ -96,6 +105,15 @@ export default function UserProfilePage() {
     });
   }, [dispatch, id, navigate]);
 
+  const handleAvatarUpload = async (file: File) => {
+    const updatedUser = await dispatch(uploadAvatarThunk(file)).unwrap();
+
+    setEditData((prev) => ({
+      ...prev,
+      avatar_url: updatedUser.avatar_url ?? "",
+    }));
+  };
+
   if (loading) {
     return (
       <Box sx={{ textAlign: "center", py: 6 }}>
@@ -117,6 +135,9 @@ export default function UserProfilePage() {
 
         <UserProfileForm
           username={editMode ? editData.username : user.username}
+          about={editMode ? editData.about : user.about}
+          avatarUrl={editMode ? editData.avatar_url : user.avatar_url}
+          onAvatarUpload={handleAvatarUpload}
           email={user.email}
           authProviderId={user.auth_provider_id}
           editMode={editMode}
