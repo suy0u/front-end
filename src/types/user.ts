@@ -1,5 +1,3 @@
-import { type LoginResponse } from "./auth";
-
 export interface User {
   id: number;
   email: string;
@@ -23,4 +21,6 @@ export interface UpdateUserPayload {
   password?: string;
 }
 
-export type AuthUser = LoginResponse["user"];
+export type AuthUser = Pick<User, "id" | "email"> & {
+  username?: string | null;
+};
