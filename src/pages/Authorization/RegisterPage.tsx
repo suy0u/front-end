@@ -1,12 +1,13 @@
 import { Typography, Button } from "@mui/material";
 import { AuthCard } from "../../components/Authorization/AuthorizationCard";
-import { AuthTextField } from "../../components/Authorization/AuthorizationTextField";
+
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { registerUser } from "../../api/authorization";
 import { handleApiError } from "../../utils/errorHandler";
 import TimedAlert from "../../components/Alerts/TimedAlert";
 import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButtons";
+import { AppTextField } from "../../components/TextFields/AppTextField";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -43,14 +44,14 @@ export default function RegisterPage() {
       <TimedAlert message={error} severity="error" />
 
       <form onSubmit={handleSubmit}>
-        <AuthTextField
+        <AppTextField
           label="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
 
-        <AuthTextField
+        <AppTextField
           label="Email"
           type="email"
           value={email}
@@ -58,7 +59,7 @@ export default function RegisterPage() {
           required
         />
 
-        <AuthTextField
+        <AppTextField
           label="Password"
           type="password"
           value={password}

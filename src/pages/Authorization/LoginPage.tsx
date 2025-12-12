@@ -6,9 +6,9 @@ import { setTokens, clearRedirect } from "../../store/slices/authSlice";
 import { login } from "../../api/authorization";
 import { handleApiError } from "../../utils/errorHandler";
 import { AuthCard } from "../../components/Authorization/AuthorizationCard";
-import { AuthTextField } from "../../components/Authorization/AuthorizationTextField";
 import TimedAlert from "../../components/Alerts/TimedAlert";
 import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButtons";
+import { AppTextField } from "../../components/TextFields/AppTextField";
 
 export default function LoginPage() {
   const location = useLocation();
@@ -28,7 +28,11 @@ export default function LoginPage() {
     try {
       const data = await login(email, password);
       dispatch(
-        setTokens({ access: data.access_token, refresh: data.refresh_token })
+        setTokens({
+          access: data.access_token,
+          refresh: data.refresh_token,
+          user: data.user,
+        })
       );
 
       if (redirectPath) {
@@ -56,7 +60,7 @@ export default function LoginPage() {
       <TimedAlert message={error} severity="error" />
 
       <form onSubmit={handleSubmit}>
-        <AuthTextField
+        <AppTextField
           label="Email"
           type="email"
           value={email}
@@ -64,7 +68,7 @@ export default function LoginPage() {
           required
         />
 
-        <AuthTextField
+        <AppTextField
           label="Password"
           type="password"
           value={password}
