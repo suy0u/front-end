@@ -1,5 +1,10 @@
 import api from "./axiosInstance";
-import type { LoginResponse, RegisterResponse } from "../types/auth";
+import type {
+  LoginResponse,
+  RegisterResponse,
+  SyncAuthRequest,
+  SyncAuthResponse,
+} from "../types/auth";
 
 export const login = async (
   email: string,
@@ -21,5 +26,18 @@ export const registerUser = async (
     password,
     username,
   });
+  return res.data;
+};
+
+export const syncAuth = async (
+  data: SyncAuthRequest,
+  token: string
+): Promise<SyncAuthResponse> => {
+  const res = await api.post<SyncAuthResponse>("/api/auth/sync", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   return res.data;
 };

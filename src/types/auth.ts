@@ -15,3 +15,19 @@ export interface RegisterResponse {
   email: string;
   username: string;
 }
+
+export interface SyncAuthRequest {
+  sub: string;
+  email?: string | null;
+  username?: string | null;
+}
+
+export interface SyncAuthResponse {
+  id: number;
+  email: string | null;
+  auth_provider_id: string | null;
+  username: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
