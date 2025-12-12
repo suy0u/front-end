@@ -14,6 +14,7 @@ export const theme = createTheme({
       green: "#ccf2d1",
       dark: "#1d5b4e",
       yellow: "#FFE66D",
+      orange: "#fdc068",
 
       signInBg: "#1C5F4A",
       signInHover: "#154538",
@@ -74,7 +75,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           borderRadius: "999px",
-          fontWeight: 700,
+          fontWeight: 1000,
           textTransform: "uppercase",
           boxShadow: "none",
           border: `2px solid ${theme.palette.custom.dark}`,
@@ -170,6 +171,12 @@ export const theme = createTheme({
           props: { variant: "yellow" },
           style: ({ theme }) => ({
             backgroundColor: theme.palette.custom.yellow,
+          }),
+        },
+        {
+          props: { variant: "orange" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.orange,
           }),
         },
 
