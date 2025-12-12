@@ -2,7 +2,7 @@ import { ThemeProvider, CssBaseline, Box, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import Navbar from "./Navbar";
 import { theme } from "../../theme/theme";
-import { BottomPanel } from "../HomePage/BottomPanel";
+import { BottomPanel } from "./BottomPanel";
 import { HealthCheckGrid } from "./HealthCheckGrid";
 import { ApiButtonGrid } from "./ApiButtonGrid";
 
