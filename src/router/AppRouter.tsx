@@ -8,6 +8,7 @@ import PrivateRoute from "../components/Authorization/PrivateRoute";
 import LoginPage from "../pages/Authorization/LoginPage";
 import RegisterPage from "../pages/Authorization/RegisterPage";
 import AuthCallback from "../pages/Authorization/AuthCallback";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const AppRouter = () => (
   <Routes>
@@ -51,6 +52,8 @@ const AppRouter = () => (
         </PrivateRoute>
       }
     />
+
+    <Route path="*" element={<NotFoundPage />} />
   </Routes>
 );
 
