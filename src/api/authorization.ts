@@ -32,15 +32,15 @@ export const registerUser = (
     "registerUser"
   );
 
-export const syncAuth = async (
+export const syncAuth = (
   data: SyncAuthRequest,
   token: string
-): Promise<SyncAuthResponse> => {
-  const res = await api.post<SyncAuthResponse>("/api/auth/sync", data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return res.data;
-};
+): Promise<SyncAuthResponse> =>
+  withCatch<SyncAuthResponse>(
+    api.post("/api/auth/sync", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
+    "syncAuth"
+  );
