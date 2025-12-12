@@ -1,13 +1,11 @@
 import { Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { NotFoundLayout } from "../components/NotFoundPage/NotFoundLayout";
 import { NotFoundFace } from "../components/NotFoundPage/NotFoundFace";
 
-export default function NotFoundPage({
-  message = "Looks like the page you are looking for is not here.",
-}: {
-  message?: string;
-}) {
+export default function NotFoundPage({ message }: { message?: string }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -30,11 +28,11 @@ export default function NotFoundPage({
           fontSize: { xs: 16, sm: 18, md: 25 },
         }}
       >
-        {message}
+        {message ?? t("errors.page_not_found")}
       </Typography>
 
       <Button variant="pink" size="lg" onClick={() => navigate("/")}>
-        Take me home
+        {t("actions.take_me_home")}
       </Button>
 
       <NotFoundFace />

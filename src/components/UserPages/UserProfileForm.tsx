@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { AppTextField } from "../TextFields/AppTextField";
 
 interface UserProfileFormProps {
@@ -16,11 +17,13 @@ export function UserProfileForm({
   editMode,
   onChange,
 }: UserProfileFormProps) {
+  const { t } = useTranslation();
+
   if (!editMode) {
     return (
       <>
         <Typography sx={{ mb: 1 }}>
-          <strong>Username:</strong> {username}
+          <strong>{t("profile.username")}:</strong> {username}
         </Typography>
         <Typography sx={{ mb: 1 }}>
           <strong>Email:</strong> {email}
@@ -34,7 +37,7 @@ export function UserProfileForm({
   return (
     <Stack spacing={2} sx={{ maxWidth: 420 }}>
       <AppTextField
-        label="Username"
+        label={t("profile.username")}
         value={username}
         onChange={(e) => onChange("username", e.target.value)}
         fullWidth
@@ -46,18 +49,16 @@ export function UserProfileForm({
         value={email}
         fullWidth
         disabled
-        helperText="Email cannot be changed"
+        helperText={t("profile.email_immutable")}
       />
 
       {isLocalUser && (
-        <>
-          <AppTextField
-            label="New password"
-            type="password"
-            onChange={(e) => onChange("password", e.target.value)}
-            fullWidth
-          />
-        </>
+        <AppTextField
+          label={`${t("common.new")} ${t("profile.password")}`}
+          type="password"
+          onChange={(e) => onChange("password", e.target.value)}
+          fullWidth
+        />
       )}
     </Stack>
   );

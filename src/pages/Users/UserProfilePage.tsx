@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box, Typography, CircularProgress, Button } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import AppModal from "../../components/Modals/AppModal";
 import { PageCard } from "../../components/Cards/PageCard";
@@ -23,6 +24,7 @@ interface EditUserData {
 }
 
 export default function UserProfilePage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -103,14 +105,14 @@ export default function UserProfilePage() {
   }
 
   if (error || !user) {
-    return <NotFoundPage message="User not found" />;
+    return <NotFoundPage message={t("errors.page_not_found")} />;
   }
 
   return (
     <Box sx={{ py: 6 }}>
       <PageCard>
         <Typography variant="h4" sx={{ fontWeight: 900, mb: 3 }}>
-          User Profile
+          {t("profile.user_profile")}
         </Typography>
 
         <UserProfileForm
@@ -136,24 +138,23 @@ export default function UserProfilePage() {
       <AppModal
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        title="Delete account"
+        title={t("profile.delete_account")}
         actions={
           <>
             <Button size="sm" variant="orange" onClick={handleDelete}>
-              Delete
+              {t("actions.delete")}
             </Button>
             <Button
               size="sm"
               variant="yellow"
               onClick={() => setDeleteModalOpen(false)}
             >
-              Cancel
+              {t("actions.cancel")}
             </Button>
           </>
         }
       >
-        Are you sure you want to delete your account? This action cannot be
-        undone.
+        {t("profile.delete_account_confirm")}
       </AppModal>
     </Box>
   );

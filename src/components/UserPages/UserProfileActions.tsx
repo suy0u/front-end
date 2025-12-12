@@ -1,4 +1,5 @@
 import { Stack, Button, Box } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface UserProfileActionsProps {
   editMode: boolean;
@@ -17,6 +18,8 @@ export function UserProfileActions({
   onCancel,
   onDelete,
 }: UserProfileActionsProps) {
+  const { t } = useTranslation();
+
   if (!isSelf) return null;
 
   return (
@@ -24,15 +27,15 @@ export function UserProfileActions({
       <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
         {!editMode ? (
           <Button variant="green" size="md" onClick={onEdit}>
-            Edit profile
+            {t("profile.edit_profile")}
           </Button>
         ) : (
           <>
             <Button variant="green" size="md" onClick={onSave}>
-              Save changes
+              {t("actions.save")}
             </Button>
             <Button variant="pink" size="md" onClick={onCancel}>
-              Cancel
+              {t("actions.cancel")}
             </Button>
           </>
         )}
@@ -47,7 +50,7 @@ export function UserProfileActions({
         }}
       >
         <Button variant="orange" size="md" onClick={onDelete}>
-          Delete my account
+          {t("actions.delete")}
         </Button>
       </Box>
     </>

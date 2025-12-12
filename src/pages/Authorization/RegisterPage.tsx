@@ -3,6 +3,7 @@ import { AuthCard } from "../../components/Authorization/AuthorizationCard";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { registerUser } from "../../api/authorization";
 import { handleApiError } from "../../utils/errorHandler";
 import TimedAlert from "../../components/Alerts/TimedAlert";
@@ -10,6 +11,8 @@ import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButt
 import { AppTextField } from "../../components/TextFields/AppTextField";
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -38,21 +41,21 @@ export default function RegisterPage() {
         variant="h3"
         sx={{ textAlign: "center", fontWeight: 900, mb: 3, color: "#1d5b4e" }}
       >
-        CREATE ACCOUNT
+        {t("auth.create_account")}
       </Typography>
 
       <TimedAlert message={error} severity="error" />
 
       <form onSubmit={handleSubmit}>
         <AppTextField
-          label="Username"
+          label={t("profile.username")}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
 
         <AppTextField
-          label="Email"
+          label={t("profile.email")}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -60,7 +63,7 @@ export default function RegisterPage() {
         />
 
         <AppTextField
-          label="Password"
+          label={t("profile.password")}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -68,12 +71,12 @@ export default function RegisterPage() {
         />
 
         <Button fullWidth size="lg" variant="purple" type="submit">
-          Register
+          {t("auth.sign_up")}
         </Button>
         <Typography
           sx={{ textAlign: "center", mt: 3, fontWeight: 700, color: "#1d5b4e" }}
         >
-          Or continue with
+          {t("auth.or_continue_with")}
         </Typography>
 
         <SocialAuthButtons />
