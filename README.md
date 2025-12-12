@@ -97,11 +97,13 @@ Current examples
 
 ![Users](public/users.png)
 ![User](public/user_info.png)
+![UserEdit](public/user_edit_info.png)
+![UserDelete](public/delete_modal.png)
 
 ### Companies
 
-![Users](public/companies.png)
-![User](public/company_info.png)
+![Companies](public/companies.png)
+![Company](public/company_info.png)
 
 ### Authorization
 
