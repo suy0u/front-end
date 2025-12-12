@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getUsers, getUserById, updateUser, deleteUser } from "../../api/users";
+import {
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  uploadUserAvatar,
+} from "../../api/users";
 import type { UpdateUserPayload, User, UsersResponse } from "../../types/user";
 
 interface UserState {
@@ -67,6 +73,18 @@ export const deleteUserThunk = createAsyncThunk<
     return id;
   } catch {
     return thunkAPI.rejectWithValue("Delete failed");
+  }
+});
+
+export const uploadAvatarThunk = createAsyncThunk<
+  User,
+  File,
+  { rejectValue: string }
+>("user/uploadAvatar", async (file, thunkAPI) => {
+  try {
+    return await uploadUserAvatar(file);
+  } catch {
+    return thunkAPI.rejectWithValue("Avatar upload failed");
   }
 });
 
@@ -147,6 +165,9 @@ const usersSlice = createSlice({
       .addCase(deleteUserThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Delete failed";
+      })
+      .addCase(uploadAvatarThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   },
 });
