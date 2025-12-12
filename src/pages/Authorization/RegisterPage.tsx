@@ -9,6 +9,7 @@ import { handleApiError } from "../../utils/errorHandler";
 import TimedAlert from "../../components/Alerts/TimedAlert";
 import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButtons";
 import { AppTextField } from "../../components/TextFields/AppTextField";
+import { PasswordField } from "../../components/TextFields/PasswordField";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -62,11 +63,10 @@ export default function RegisterPage() {
           required
         />
 
-        <AppTextField
+        <PasswordField
           label={t("profile.password")}
-          type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
         />
 

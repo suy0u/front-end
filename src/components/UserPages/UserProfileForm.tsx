@@ -1,6 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { AppTextField } from "../TextFields/AppTextField";
+import { PasswordField } from "../TextFields/PasswordField";
 
 interface UserProfileFormProps {
   username: string;
@@ -53,11 +54,9 @@ export function UserProfileForm({
       />
 
       {isLocalUser && (
-        <AppTextField
+        <PasswordField
           label={`${t("common.new")} ${t("profile.password")}`}
-          type="password"
-          onChange={(e) => onChange("password", e.target.value)}
-          fullWidth
+          onChange={(value) => onChange("password", value)}
         />
       )}
     </Stack>
