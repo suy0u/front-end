@@ -18,3 +18,17 @@ export const updateUser = (payload: UpdateUserPayload): Promise<User> =>
 
 export const deleteUser = (): Promise<void> =>
   withCatch<void>(api.delete(`/api/users/`), "deleteUser");
+
+export const uploadUserAvatar = (file: File): Promise<User> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return withCatch<User>(
+    api.post("api/users/avatar", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+    "uploadUserAvatar"
+  );
+};
