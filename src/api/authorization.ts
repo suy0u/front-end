@@ -5,29 +5,32 @@ import type {
   SyncAuthRequest,
   SyncAuthResponse,
 } from "../types/auth";
+import { withCatch } from "./withCatch";
 
-export const login = async (
+export const login = (
   email: string,
   password: string
-): Promise<LoginResponse> => {
-  const res = await api.post<LoginResponse>("/api/auth/login", null, {
-    params: { email, password },
-  });
-  return res.data;
-};
+): Promise<LoginResponse> =>
+  withCatch<LoginResponse>(
+    api.post("/api/auth/login", null, {
+      params: { email, password },
+    }),
+    "login"
+  );
 
-export const registerUser = async (
+export const registerUser = (
   email: string,
   password: string,
   username: string
-): Promise<RegisterResponse> => {
-  const res = await api.post<RegisterResponse>("/api/users/", {
-    email,
-    password,
-    username,
-  });
-  return res.data;
-};
+): Promise<RegisterResponse> =>
+  withCatch<RegisterResponse>(
+    api.post("/api/users/", {
+      email,
+      password,
+      username,
+    }),
+    "registerUser"
+  );
 
 export const syncAuth = async (
   data: SyncAuthRequest,
