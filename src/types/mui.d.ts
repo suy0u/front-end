@@ -1,5 +1,6 @@
 import "@mui/material/styles";
 import "@mui/material/Button";
+import "@mui/material/Chip";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -12,6 +13,9 @@ declare module "@mui/material/styles" {
       dark: string;
       yellow: string;
       orange: string;
+      red: string;
+      cyan: string;
+      white: string;
 
       signInBg: string;
       signInHover: string;
@@ -39,6 +43,9 @@ declare module "@mui/material/Button" {
     orange: true;
     signIn: true;
     signUp: true;
+    red: true;
+    cyan: true;
+    white: true;
   }
 
   interface ButtonPropsSizeOverrides {
@@ -53,5 +60,15 @@ declare module "@mui/material/Paper" {
     companyCard: true;
     userCard: true;
     pageCard: true;
+  }
+}
+
+declare module "@mui/material/Chip" {
+  interface ChipPropsVariantOverrides {
+    companyPublic: true;
+    companyPrivate: true;
+    roleOwner: true;
+    roleAdmin: true;
+    roleMember: true;
   }
 }

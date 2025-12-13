@@ -15,6 +15,9 @@ export const theme = createTheme({
       dark: "#1d5b4e",
       yellow: "#FFE66D",
       orange: "#fdc068",
+      red: "#eb7171ff",
+      cyan: "#40ceb5",
+      white: "#fff",
 
       signInBg: "#1C5F4A",
       signInHover: "#154538",
@@ -267,6 +270,53 @@ export const theme = createTheme({
           },
         }),
       },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          fontWeight: 700,
+          borderRadius: "8px",
+          color: theme.palette.custom.white,
+          textTransform: "uppercase",
+          fontSize: 11,
+        }),
+      },
+
+      variants: [
+        {
+          props: { variant: "companyPublic" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.cyan,
+            color: theme.palette.custom.dark,
+          }),
+        },
+        {
+          props: { variant: "companyPrivate" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.red,
+            color: theme.palette.custom.dark,
+          }),
+        },
+
+        {
+          props: { variant: "roleOwner" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.orange,
+          }),
+        },
+        {
+          props: { variant: "roleAdmin" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.yellow,
+          }),
+        },
+        {
+          props: { variant: "roleMember" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.purple,
+          }),
+        },
+      ],
     },
   },
 });
