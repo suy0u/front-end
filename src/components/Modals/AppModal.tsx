@@ -5,7 +5,7 @@ interface AppModalProps {
   open: boolean;
   title?: string;
   onClose: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   actions?: React.ReactNode;
 }
 

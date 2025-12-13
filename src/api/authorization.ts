@@ -1,17 +1,13 @@
 import api from "./axiosInstance";
 import type {
-  LoginResponse,
+  AuthResponse,
   RegisterResponse,
   SyncAuthRequest,
-  SyncAuthResponse,
 } from "../types/auth";
 import { withCatch } from "./withCatch";
 
-export const login = (
-  email: string,
-  password: string
-): Promise<LoginResponse> =>
-  withCatch<LoginResponse>(
+export const login = (email: string, password: string): Promise<AuthResponse> =>
+  withCatch<AuthResponse>(
     api.post("/api/auth/login", null, {
       params: { email, password },
     }),
@@ -35,8 +31,8 @@ export const registerUser = (
 export const syncAuth = (
   data: SyncAuthRequest,
   token: string
-): Promise<SyncAuthResponse> =>
-  withCatch<SyncAuthResponse>(
+): Promise<AuthResponse> =>
+  withCatch<AuthResponse>(
     api.post("/api/auth/sync", data, {
       headers: {
         Authorization: `Bearer ${token}`,

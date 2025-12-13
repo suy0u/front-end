@@ -1,5 +1,5 @@
 export interface User {
-  id: number;
+  id: string;
   email: string;
   username: string;
   password: string;
@@ -29,3 +29,10 @@ export interface UpdateUserPayload {
 export type AuthUser = Pick<User, "id" | "email"> & {
   username?: string | null;
 };
+
+export interface EditUserData {
+  username: string;
+  password: string;
+  about: string;
+  avatar_url: string;
+}

@@ -10,7 +10,7 @@ export const getUsers = (page = 1, size = 20): Promise<UsersResponse> =>
     "getUsers"
   );
 
-export const getUserById = (id: number): Promise<User> =>
+export const getUserById = (id: string): Promise<User> =>
   withCatch<User>(api.get(`/api/users/${id}`), "getUserById");
 
 export const updateUser = (payload: UpdateUserPayload): Promise<User> =>
