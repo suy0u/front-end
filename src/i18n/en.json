@@ -20,13 +20,25 @@
     "avatar": "Avatar"
   },
 
+  "company": {
+    "name": "Name",
+    "isprivate": "Private",
+    "ispublic": "Public",
+    "delete_company": "Delete company",
+    "delete_company_confirm": "Are you sure you want to delete the company? This action cannot be undone.",
+    "leave_company": "Leave company",
+    "leave_company_confirm": "Are you sure you want to leave the company?"
+  },
+
   "actions": {
+    "create": "Create",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
     "take_me_home": "Take me home",
     "edit": "Edit",
-    "upload": "Upload"
+    "upload": "Upload",
+    "leave": "Leave"
   },
 
   "auth": {
@@ -38,12 +50,14 @@
   },
 
   "errors": {
-    "page_not_found": "Looks like the page you are looking for is not here."
+    "page_not_found": "Looks like the page you are looking for is not here.",
+    "not_found": "Not Found"
   },
 
   "common": {
     "new": "New",
     "confirm": "Confirm",
-    "required": "Required field"
+    "required": "Required field",
+    "my": "My"
   }
 }
