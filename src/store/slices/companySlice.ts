@@ -105,7 +105,6 @@ const companiesSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      // LIST
       .addCase(fetchCompanies.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -121,7 +120,6 @@ const companiesSlice = createSlice({
         state.error = action.payload ?? "Failed to load companies";
       })
 
-      // GET BY ID
       .addCase(fetchCompanyById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -136,12 +134,10 @@ const companiesSlice = createSlice({
         state.error = action.payload ?? "Company not found";
       })
 
-      // CREATE
       .addCase(createCompanyThunk.fulfilled, (state, action) => {
         state.list.unshift(action.payload);
       })
 
-      // UPDATE
       .addCase(updateCompanyThunk.fulfilled, (state, action) => {
         state.company = action.payload;
         state.list = state.list.map((c) =>
@@ -149,7 +145,6 @@ const companiesSlice = createSlice({
         );
       })
 
-      // DELETE
       .addCase(deleteCompanyThunk.fulfilled, (state, action) => {
         const id = action.payload;
         state.list = state.list.filter((c) => c.id !== id);
