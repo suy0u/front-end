@@ -1,68 +1,151 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getMyCompanies, leaveCompany } from "../../api/memberships";
-import type { MyCompany, MyCompaniesResponse } from "../../types/company";
+import {
+  createSlice,
+  isPending,
+  isFulfilled,
+  isRejectedWithValue,
+} from "@reduxjs/toolkit";
+
+import type { MyCompany } from "../../types/company";
+import type {
+  CompanyInvitation,
+  CompanyJoinRequest,
+  CompanyMember,
+} from "../../types/membership";
+
+import {
+  fetchMyCompanies,
+  fetchMyInvitations,
+  fetchMyRequests,
+  leaveCompanyThunk,
+  fetchCompanyMembers,
+  fetchCompanyInvitations,
+  fetchCompanyRequests,
+  acceptInvitationThunk,
+  declineInvitationThunk,
+  requestToJoinCompanyThunk,
+  cancelMyRequestThunk,
+  acceptCompanyRequestThunk,
+  rejectCompanyRequestThunk,
+  removeCompanyMemberThunk,
+} from "../thunks/membershipThunks";
 
 export interface MembershipState {
   myCompanies: MyCompany[];
+
+  myInvitations: CompanyInvitation[];
+  myRequests: CompanyJoinRequest[];
+
+  companyMembers: CompanyMember[];
+  companyInvitations: CompanyInvitation[];
+  companyRequests: CompanyJoinRequest[];
+
   loading: boolean;
   error: string | null;
 }
 
 const initialState: MembershipState = {
   myCompanies: [],
+  myInvitations: [],
+  myRequests: [],
+
+  companyMembers: [],
+  companyInvitations: [],
+  companyRequests: [],
+
   loading: false,
   error: null,
 };
 
-export const fetchMyCompanies = createAsyncThunk<
-  MyCompaniesResponse,
-  void,
-  { rejectValue: string }
->("membership/fetchMyCompanies", async (_, thunkAPI) => {
-  try {
-    return await getMyCompanies();
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to load companies");
-  }
-});
-export const leaveCompanyThunk = createAsyncThunk<
-  string,
-  string,
-  { rejectValue: string }
->("membership/leaveCompany", async (companyId, thunkAPI) => {
-  try {
-    await leaveCompany(companyId);
-    return companyId;
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to leave company");
-  }
-});
+const membershipThunks = [
+  fetchMyCompanies,
+  fetchMyInvitations,
+  fetchMyRequests,
+  leaveCompanyThunk,
+
+  fetchCompanyMembers,
+  fetchCompanyInvitations,
+  fetchCompanyRequests,
+
+  acceptInvitationThunk,
+  declineInvitationThunk,
+  requestToJoinCompanyThunk,
+  cancelMyRequestThunk,
+
+  acceptCompanyRequestThunk,
+  rejectCompanyRequestThunk,
+  removeCompanyMemberThunk,
+] as const;
 
 const membershipSlice = createSlice({
   name: "membership",
   initialState,
-  reducers: {},
+
+  reducers: {
+    /* clear owner-related data when leaving company page */
+    clearCompanyMembership(state) {
+      state.companyMembers = [];
+      state.companyInvitations = [];
+      state.companyRequests = [];
+    },
+
+    /* optional: clear all (e.g. on logout) */
+    clearMembership(state) {
+      state.myCompanies = [];
+      state.myInvitations = [];
+      state.myRequests = [];
+
+      state.companyMembers = [];
+      state.companyInvitations = [];
+      state.companyRequests = [];
+
+      state.loading = false;
+      state.error = null;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMyCompanies.pending, (state) => {
+      .addCase(fetchMyCompanies.fulfilled, (state, action) => {
+        state.myCompanies = action.payload.items;
+      })
+
+      .addCase(fetchMyInvitations.fulfilled, (state, action) => {
+        state.myInvitations = action.payload;
+      })
+
+      .addCase(fetchMyRequests.fulfilled, (state, action) => {
+        state.myRequests = action.payload;
+      })
+
+      .addCase(fetchCompanyMembers.fulfilled, (state, action) => {
+        state.companyMembers = action.payload;
+      })
+
+      .addCase(fetchCompanyInvitations.fulfilled, (state, action) => {
+        state.companyInvitations = action.payload;
+      })
+
+      .addCase(fetchCompanyRequests.fulfilled, (state, action) => {
+        state.companyRequests = action.payload;
+      })
+
+      .addMatcher(isPending(...membershipThunks), (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchMyCompanies.fulfilled, (state, action) => {
+
+      .addMatcher(isFulfilled(...membershipThunks), (state) => {
         state.loading = false;
-        state.myCompanies = action.payload.items;
       })
-      .addCase(fetchMyCompanies.rejected, (state, action) => {
+
+      .addMatcher(isRejectedWithValue(...membershipThunks), (state, action) => {
         state.loading = false;
-        state.error = action.payload ?? "Error";
-      })
-      .addCase(leaveCompanyThunk.fulfilled, (state, action) => {
-        state.myCompanies = state.myCompanies.filter(
-          (c) => c.company_id !== action.payload
-        );
+        state.error = action.payload;
       });
   },
 });
+
+export const { clearCompanyMembership, clearMembership } =
+  membershipSlice.actions;
 
 export default membershipSlice.reducer;
