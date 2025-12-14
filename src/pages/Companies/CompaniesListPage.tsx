@@ -13,7 +13,7 @@ import { DataCard } from "../../components/Cards/DataCard";
 import { CreateCompanyModal } from "../../components/Modals/CreateCompanyModal";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchCompanies } from "../../store/slices/companySlice";
+import { fetchCompanies } from "../../store/thunks/companyThunks";
 import { getVisibilityVariant } from "../../utils/companyChips";
 
 export default function CompaniesListPage() {

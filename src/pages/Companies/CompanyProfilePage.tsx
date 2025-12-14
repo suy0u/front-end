@@ -9,11 +9,9 @@ import { DeleteCompanyModal } from "../../components/Modals/DeleteCompanyModal";
 import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-  fetchCompanyById,
-  clearCompany,
-} from "../../store/slices/companySlice";
-import { leaveCompanyThunk } from "../../store/slices/membershipSlice";
+import { clearCompany } from "../../store/slices/companySlice";
+import { fetchCompanyById } from "../../store/thunks/companyThunks";
+import { leaveCompanyThunk } from "../../store/thunks/membershipThunks";
 
 import CompanyHeader from "../../components/CompanyPages/CompanyHeader";
 import CompanyDescription from "../../components/CompanyPages/CompanyDescription";

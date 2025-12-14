@@ -15,12 +15,12 @@ import {
   updateUserThunk,
   deleteUserThunk,
   uploadAvatarThunk,
-} from "../../store/slices/userSlice";
+} from "../../store/thunks/userThunks";
 import { logout } from "../../store/slices/authSlice";
 import {
   fetchMyCompanies,
   leaveCompanyThunk,
-} from "../../store/slices/membershipSlice";
+} from "../../store/thunks/membershipThunks";
 
 import { type EditUserData } from "../../types/user";
 import type { UpdateUserPayload } from "../../types/user";

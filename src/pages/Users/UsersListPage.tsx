@@ -6,7 +6,7 @@ import Pagination from "../../components/Pagination";
 import { UsersList } from "../../components/UserPages/UserList";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchUsers } from "../../store/slices/userSlice";
+import { fetchUsers } from "../../store/thunks/userThunks";
 
 const USERS_PER_PAGE = 10;
 

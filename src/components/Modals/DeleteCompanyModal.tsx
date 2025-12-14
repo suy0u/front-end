@@ -1,7 +1,7 @@
 import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import AppModal from "./AppModal";
 import { useAppDispatch } from "../../store/hooks";
-import { deleteCompanyThunk } from "../../store/slices/companySlice";
+import { deleteCompanyThunk } from "../../store/thunks/companyThunks";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
