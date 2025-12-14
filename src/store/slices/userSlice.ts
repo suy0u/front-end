@@ -59,7 +59,6 @@ const usersSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
         state.list = action.payload.items;
