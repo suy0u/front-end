@@ -1,58 +1,39 @@
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { PageCard } from "../../components/Cards/PageCard";
+import CompanyHeader from "../../components/CompanyPages/CompanyHeader";
+import CompanyDescription from "../../components/CompanyPages/CompanyDescription";
+import { CompanyMembersList } from "../../components/CompanyPages/CompanyMembersList";
+import { CompanyInvitationsList } from "../../components/CompanyPages/CompanyInvitationsList";
+import { CompanyRequestsList } from "../../components/CompanyPages/CompanyRequestsList";
+
 import { EditCompanyModal } from "../../components/Modals/EditCompanyModal";
 import { DeleteCompanyModal } from "../../components/Modals/DeleteCompanyModal";
 import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
 
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { clearCompany } from "../../store/slices/companySlice";
-import { fetchCompanyById } from "../../store/thunks/companyThunks";
-import { leaveCompanyThunk } from "../../store/thunks/membershipThunks";
-
-import CompanyHeader from "../../components/CompanyPages/CompanyHeader";
-import CompanyDescription from "../../components/CompanyPages/CompanyDescription";
-
-import type { MyCompany, LeaveCompanyState } from "../../types/company";
+import { useCompanyProfilePage } from "./hooks/useCompanyProfilePage";
 
 export default function CompanyProfilePage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
 
-  const { company, loading, error } = useAppSelector(
-    (state) => state.companies
-  );
-  const authUser = useAppSelector((state) => state.auth.user);
-  const myCompanies = useAppSelector((state) => state.membership.myCompanies);
+  const {
+    company,
+    loading,
+    error,
 
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [leaveCompany, setLeaveCompany] = useState<LeaveCompanyState>(null);
+    isOwner,
+    canLeave,
+    myMembership,
 
-  useEffect(() => {
-    if (id) dispatch(fetchCompanyById(id));
-    return () => {
-      dispatch(clearCompany());
-    };
-  }, [dispatch, id]);
+    isEditModalOpen,
+    isDeleteModalOpen,
+    companyToLeave,
 
-  const myMembership: MyCompany | undefined = useMemo(
-    () => myCompanies.find((c) => c.company_id === id),
-    [myCompanies, id]
-  );
-
-  const isOwner = authUser?.id === company?.owner_id;
-  const canLeave = Boolean(myMembership && !isOwner);
-
-  const handleLeaveConfirm = async () => {
-    if (!leaveCompany) return;
-    await dispatch(leaveCompanyThunk(leaveCompany.company_id)).unwrap();
-    setLeaveCompany(null);
-  };
+    actions,
+  } = useCompanyProfilePage(id);
 
   if (loading) {
     return (
@@ -77,9 +58,9 @@ export default function CompanyProfilePage() {
           company={company}
           isOwner={isOwner}
           canLeave={canLeave}
-          onEdit={() => setEditOpen(true)}
-          onDelete={() => setDeleteOpen(true)}
-          onLeave={() => setLeaveCompany(myMembership!)}
+          onEdit={() => actions.setIsEditModalOpen(true)}
+          onDelete={() => actions.setIsDeleteModalOpen(true)}
+          onLeave={() => actions.setCompanyToLeave(myMembership!)}
         />
 
         <CompanyDescription description={company.description} />
@@ -87,14 +68,22 @@ export default function CompanyProfilePage() {
 
       {isOwner && (
         <>
+          <CompanyMembersList companyId={company.id} isOwner={isOwner} />
+          <CompanyInvitationsList companyId={company.id} />
+          <CompanyRequestsList companyId={company.id} />
+        </>
+      )}
+
+      {isOwner && (
+        <>
           <EditCompanyModal
-            open={editOpen}
-            onClose={() => setEditOpen(false)}
+            open={isEditModalOpen}
+            onClose={() => actions.setIsEditModalOpen(false)}
             company={company}
           />
           <DeleteCompanyModal
-            open={deleteOpen}
-            onClose={() => setDeleteOpen(false)}
+            open={isDeleteModalOpen}
+            onClose={() => actions.setIsDeleteModalOpen(false)}
             companyId={company.id}
           />
         </>
@@ -102,9 +91,9 @@ export default function CompanyProfilePage() {
 
       {canLeave && (
         <LeaveCompanyModal
-          company={leaveCompany}
-          onClose={() => setLeaveCompany(null)}
-          onConfirm={handleLeaveConfirm}
+          company={companyToLeave}
+          onClose={() => actions.setCompanyToLeave(null)}
+          onConfirm={actions.confirmLeaveCompany}
         />
       )}
     </Box>
