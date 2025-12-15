@@ -2,26 +2,41 @@ import api from "./axiosInstance";
 import { withCatch } from "./withCatch";
 import type { MyCompaniesResponse } from "../types/company";
 import type {
-  CompanyInvitation,
-  CompanyJoinRequest,
+  ChangeAdminRoleParams,
   CompanyMember,
+  CompanyInvitationsResponse,
+  CompanyRequestsResponse,
+  MyInvitationsResponse,
+  CompanyMembersResponse,
+  InviteUsersBulkPayload,
+  BulkInviteResponse,
+  CompanyJoinRequest,
 } from "../types/membership";
+import type { PaginationParams } from "../types/common";
 
-/* ---------- MY ---------- */
 export const getMyCompanies = (
-  page = 1,
-  size = 20
+  params: PaginationParams = {}
 ): Promise<MyCompaniesResponse> =>
   withCatch(
-    api.get("/api/memberships/me/companies", { params: { page, size } }),
+    api.get("/api/memberships/me/companies", { params }),
     "getMyCompanies"
   );
 
-export const getMyInvitations = (): Promise<CompanyInvitation[]> =>
-  withCatch(api.get("/api/memberships/me/invitations"), "getMyInvitations");
+export const getMyInvitations = (
+  params: PaginationParams = {}
+): Promise<MyInvitationsResponse> =>
+  withCatch(
+    api.get("/api/memberships/me/invitations", { params }),
+    "getMyInvitations"
+  );
 
-export const getMyRequests = (): Promise<CompanyJoinRequest[]> =>
-  withCatch(api.get("/api/memberships/me/requests"), "getMyRequests");
+export const getMyRequests = (
+  params: PaginationParams = {}
+): Promise<CompanyRequestsResponse> =>
+  withCatch(
+    api.get("/api/memberships/me/requests", { params }),
+    "getMyInvitations"
+  );
 
 export const cancelMyRequest = (requestId: string): Promise<void> =>
   withCatch(
@@ -29,99 +44,101 @@ export const cancelMyRequest = (requestId: string): Promise<void> =>
     "cancelMyRequest"
   );
 
-/* ---------- COMPANY ---------- */
-
 export const getCompanyMembers = (
-  companyId: string
-): Promise<CompanyMember[]> =>
+  companyId: string,
+  params?: PaginationParams
+): Promise<CompanyMembersResponse> =>
   withCatch(
-    api.get(`/api/memberships/companies/${companyId}/members`),
+    api.get(`/api/memberships/members/${companyId}`, {
+      params,
+    }),
     "getCompanyMembers"
   );
 
 export const getCompanyInvitations = (
-  companyId: string
-): Promise<CompanyInvitation[]> =>
+  companyId: string,
+  params: PaginationParams = {}
+): Promise<CompanyInvitationsResponse> =>
   withCatch(
-    api.get(`/api/memberships/companies/${companyId}/invitations`),
+    api.get(`/api/memberships/invitations/${companyId}`, { params }),
     "getCompanyInvitations"
   );
 
 export const getCompanyRequests = (
-  companyId: string
-): Promise<CompanyJoinRequest[]> =>
+  companyId: string,
+  params: PaginationParams = {}
+): Promise<CompanyRequestsResponse> =>
   withCatch(
-    api.get(`/api/memberships/companies/${companyId}/requests`),
+    api.get(`/api/memberships/requests/${companyId}`, { params }),
     "getCompanyRequests"
   );
 
 export const removeCompanyMember = (
   companyId: string,
-  userId: string
+  memberUserId: string
 ): Promise<void> =>
   withCatch(
-    api.post(
-      `/api/memberships/companies/${companyId}/members/${userId}/remove`
-    ),
+    api.delete(`/api/memberships/members/${companyId}/${memberUserId}`),
     "removeCompanyMember"
   );
 
-/* ---------- ACTIONS ---------- */
-
-export const inviteUserToCompany = (
-  companyId: string,
-  email: string
-): Promise<void> =>
+export const inviteUsersToCompanyBulk = (
+  payload: InviteUsersBulkPayload
+): Promise<BulkInviteResponse> =>
   withCatch(
-    api.post(`/api/memberships/${companyId}/invitations`, { email }),
-    "inviteUserToCompany"
+    api.post(`/api/memberships/invitations/${payload.companyId}/bulk`, {
+      user_ids: payload.userIds,
+    }),
+    "inviteUsersToCompanyBulk"
   );
 
-export const cancelInvitation = (invitationId: string): Promise<void> =>
+export const cancelCompanyInvitation = (invitationId: string): Promise<void> =>
   withCatch(
-    api.post(`/api/memberships/companies/invitations/${invitationId}/cancel`),
-    "cancelInvitation"
+    api.post<void>(`/api/memberships/invitations/${invitationId}/cancel`),
+    "cancelCompanyInvitation"
   );
 
 export const acceptInvitation = (invitationId: string): Promise<void> =>
   withCatch(
-    api.post(`/api/memberships/companies/invitations/${invitationId}/accept`),
+    api.post(`/api/memberships/invitations/${invitationId}/accept`),
     "acceptInvitation"
   );
 
 export const declineInvitation = (invitationId: string): Promise<void> =>
   withCatch(
-    api.post(`/api/memberships/companies/invitations/${invitationId}/decline`),
+    api.post(`/api/memberships/invitations/${invitationId}/decline`),
     "declineInvitation"
   );
 
-export const requestToJoinCompany = (companyId: string): Promise<void> =>
+export const requestToJoinCompany = (
+  companyId: string
+): Promise<CompanyJoinRequest> =>
   withCatch(
-    api.post(`/api/memberships/companies/${companyId}/requests`),
+    api.post(`/api/memberships/requests/${companyId}`),
     "requestToJoinCompany"
   );
 
 export const cancelJoinRequest = (requestId: string): Promise<void> =>
   withCatch(
-    api.post(`/api/memberships/companies/requests/${requestId}/cancel`),
+    api.post(`/api/memberships/requests/${requestId}/cancel`),
     "cancelJoinRequest"
   );
 
 export const acceptJoinRequest = (requestId: string): Promise<void> =>
   withCatch(
-    api.post(`/api/memberships/companies/requests/${requestId}/accept`),
+    api.post(`/api/memberships/requests/${requestId}/accept`),
     "acceptJoinRequest"
   );
 
 export const declineJoinRequest = (requestId: string): Promise<void> =>
   withCatch(
-    api.post(`/api/memberships/companies/requests/${requestId}/decline`),
+    api.post(`/api/memberships/requests/${requestId}/decline`),
     "declineJoinRequest"
   );
 
 export const leaveCompany = (companyId: string): Promise<void> =>
   withCatch(
-    api.post(`/api/memberships/companies/${companyId}/leave`),
+    api.post(`/api/memberships/members/${companyId}/leave`),
     "leaveCompany"
   );
 
@@ -135,4 +152,23 @@ export const rejectCompanyRequest = (requestId: string): Promise<void> =>
   withCatch(
     api.post(`/api/memberships/requests/${requestId}/reject`),
     "rejectCompanyRequest"
+  );
+export const promoteToAdmin = (
+  params: ChangeAdminRoleParams
+): Promise<CompanyMember> =>
+  withCatch(
+    api.post(
+      `/api/memberships/admins/${params.companyId}/${params.memberUserId}/promote`
+    ),
+    "promoteToAdmin"
+  );
+
+export const demoteAdmin = (
+  params: ChangeAdminRoleParams
+): Promise<CompanyMember> =>
+  withCatch(
+    api.post(
+      `/api/memberships/admins/${params.companyId}/${params.memberUserId}/demote`
+    ),
+    "demoteAdmin"
   );
