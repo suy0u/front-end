@@ -1,111 +1,37 @@
-import { useEffect, useState } from "react";
 import { Box, CircularProgress } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import NotFoundPage from "../NotFoundPage";
+
 import UserProfileHeader from "../../components/UserPages/UserProfileHeader";
 import UserCompaniesSection from "../../components/UserPages/UserCompaniesSection";
+import { UserInvitationsList } from "../../components/UserPages/UserInvitationsList";
+import { UserRequestsList } from "../../components/UserPages/UserRequestsList";
+
 import DeleteAccountModal from "../../components/Modals/Users/DeleteAccountModal";
 import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
 
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-  fetchUserById,
-  updateUserThunk,
-  deleteUserThunk,
-  uploadAvatarThunk,
-} from "../../store/thunks/userThunks";
-import { logout } from "../../store/slices/authSlice";
-import {
-  fetchMyCompanies,
-  leaveCompanyThunk,
-} from "../../store/thunks/membershipThunks";
-
-import { type EditUserData } from "../../types/user";
-import type { UpdateUserPayload } from "../../types/user";
-import type { LeaveCompanyState } from "../../types/company";
-
-const emptyEditData: EditUserData = {
-  username: "",
-  password: "",
-  about: "",
-  avatar_url: "",
-};
+import { useUserProfilePage } from "./hooks/useUserProfilePage";
 
 export default function UserProfilePage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
-  const { user, loading, error } = useAppSelector((s) => s.users);
-  const authUser = useAppSelector((s) => s.auth.user);
-  const membership = useAppSelector((s) => s.membership);
+  const {
+    user,
+    loading,
+    error,
+    membership,
+    isSelf,
 
-  const isSelf = id === authUser?.id;
+    editMode,
+    editData,
+    isDeleteModalOpen,
+    companyToLeave,
 
-  const [editMode, setEditMode] = useState(false);
-  const [editData, setEditData] = useState(emptyEditData);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [leaveCompany, setLeaveCompany] = useState<LeaveCompanyState>(null);
-
-  useEffect(() => {
-    if (!id) return;
-
-    dispatch(fetchUserById(id));
-    if (isSelf) dispatch(fetchMyCompanies());
-  }, [id, isSelf, dispatch]);
-
-  const startEdit = () => {
-    if (!user) return;
-    setEditData({
-      username: user.username ?? "",
-      password: "",
-      about: user.about ?? "",
-      avatar_url: user.avatar_url ?? "",
-    });
-    setEditMode(true);
-  };
-
-  const saveProfile = async () => {
-    if (!id) return;
-
-    const payload: UpdateUserPayload = {
-      username: editData.username,
-      about: editData.about,
-      avatar_url: editData.avatar_url,
-      ...(editData.password && { password: editData.password }),
-    };
-
-    await dispatch(updateUserThunk({ id, data: payload })).unwrap();
-
-    if (editData.password) {
-      dispatch(logout());
-      navigate("/login");
-      return;
-    }
-
-    setEditMode(false);
-  };
-
-  const deleteAccount = async () => {
-    if (!id) return;
-    await dispatch(deleteUserThunk(id));
-    dispatch(logout());
-    navigate("/login");
-  };
-
-  const uploadAvatar = async (file: File) => {
-    const updated = await dispatch(uploadAvatarThunk(file)).unwrap();
-    setEditData((p) => ({ ...p, avatar_url: updated.avatar_url ?? "" }));
-  };
-
-  const leaveSelectedCompany = async () => {
-    if (!leaveCompany) return;
-    await dispatch(leaveCompanyThunk(leaveCompany.company_id)).unwrap();
-    setLeaveCompany(null);
-  };
+    actions,
+  } = useUserProfilePage(id);
 
   if (loading) {
     return (
@@ -126,31 +52,36 @@ export default function UserProfilePage() {
         isSelf={isSelf}
         editMode={editMode}
         editData={editData}
-        onEdit={startEdit}
-        onSave={saveProfile}
-        onCancel={() => setEditMode(false)}
-        onDelete={() => setDeleteOpen(true)}
-        onAvatarUpload={uploadAvatar}
-        onChange={setEditData}
+        onEdit={actions.startEdit}
+        onSave={actions.saveProfile}
+        onCancel={() => actions.setEditMode(false)}
+        onDelete={() => actions.setIsDeleteModalOpen(true)}
+        onAvatarUpload={actions.uploadAvatar}
+        onChange={actions.setEditData}
       />
 
       {isSelf && (
-        <UserCompaniesSection
-          membership={membership}
-          onLeaveClick={setLeaveCompany}
-        />
+        <Box sx={{ mt: 6 }}>
+          <UserCompaniesSection
+            membership={membership}
+            onLeaveClick={actions.setCompanyToLeave}
+          />
+
+          <UserInvitationsList />
+          <UserRequestsList />
+        </Box>
       )}
 
       <DeleteAccountModal
-        open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        onConfirm={deleteAccount}
+        open={isDeleteModalOpen}
+        onClose={() => actions.setIsDeleteModalOpen(false)}
+        onConfirm={actions.deleteAccount}
       />
 
       <LeaveCompanyModal
-        company={leaveCompany}
-        onClose={() => setLeaveCompany(null)}
-        onConfirm={leaveSelectedCompany}
+        company={companyToLeave}
+        onClose={() => actions.setCompanyToLeave(null)}
+        onConfirm={actions.leaveSelectedCompany}
       />
     </Box>
   );

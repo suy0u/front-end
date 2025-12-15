@@ -32,9 +32,7 @@ export default function UserCompaniesSection({
       {membership.loading && <CircularProgress />}
 
       {!membership.loading && !membership.myCompanies.length && (
-        <Typography sx={{ opacity: 0.7 }}>
-          {t("profile.no_companies")}
-        </Typography>
+        <Typography sx={{ opacity: 0.7 }}>{t("errors.not_found")}</Typography>
       )}
 
       <Stack spacing={2}>
@@ -42,7 +40,16 @@ export default function UserCompaniesSection({
           <DataCard
             key={company.company_id}
             to={`/companies/${company.company_id}`}
-            title={company.name}
+            title={
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography sx={{ fontWeight: 600 }}>{company.name}</Typography>
+                <Chip
+                  size="sm"
+                  label={company.role}
+                  variant={getRoleVariant(company.role)}
+                />
+              </Stack>
+            }
             right={
               company.role !== "OWNER" && (
                 <Button
@@ -57,13 +64,7 @@ export default function UserCompaniesSection({
                 </Button>
               )
             }
-          >
-            <Chip
-              size="small"
-              label={company.role}
-              variant={getRoleVariant(company.role)}
-            />
-          </DataCard>
+          ></DataCard>
         ))}
       </Stack>
     </Box>
