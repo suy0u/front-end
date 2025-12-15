@@ -16,6 +16,7 @@ declare module "@mui/material/styles" {
       red: string;
       cyan: string;
       white: string;
+      dark_blue: string;
 
       signInBg: string;
       signInHover: string;
@@ -46,6 +47,7 @@ declare module "@mui/material/Button" {
     red: true;
     cyan: true;
     white: true;
+    dark_blue: true;
   }
 
   interface ButtonPropsSizeOverrides {
@@ -70,5 +72,11 @@ declare module "@mui/material/Chip" {
     roleOwner: true;
     roleAdmin: true;
     roleMember: true;
+  }
+
+  interface ChipPropsSizeOverrides {
+    sm: true;
+    md: true;
+    lg: true;
   }
 }

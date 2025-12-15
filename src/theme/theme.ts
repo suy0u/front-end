@@ -18,6 +18,7 @@ export const theme = createTheme({
       red: "#eb7171ff",
       cyan: "#40ceb5",
       white: "#fff",
+      dark_blue: "#003366",
 
       signInBg: "#1C5F4A",
       signInHover: "#154538",
@@ -284,6 +285,33 @@ export const theme = createTheme({
 
       variants: [
         {
+          props: { size: "sm" },
+          style: {
+            height: 18,
+            minHeight: 18,
+            fontSize: 10,
+            lineHeight: "18px",
+            padding: 0,
+            "& .MuiChip-label": {
+              padding: "0 8px",
+            },
+          },
+        },
+        {
+          props: { size: "md" },
+          style: {
+            padding: "4px 20px",
+            fontSize: 12,
+          },
+        },
+        {
+          props: { size: "lg" },
+          style: {
+            padding: "4px 20px",
+            fontSize: 12,
+          },
+        },
+        {
           props: { variant: "companyPublic" },
           style: ({ theme }) => ({
             backgroundColor: theme.palette.custom.cyan,
@@ -302,12 +330,14 @@ export const theme = createTheme({
           props: { variant: "roleOwner" },
           style: ({ theme }) => ({
             backgroundColor: theme.palette.custom.orange,
+            color: theme.palette.custom.dark_blue,
           }),
         },
         {
           props: { variant: "roleAdmin" },
           style: ({ theme }) => ({
             backgroundColor: theme.palette.custom.yellow,
+            color: theme.palette.custom.dark_blue,
           }),
         },
         {
