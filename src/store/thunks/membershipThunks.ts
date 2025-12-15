@@ -1,6 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import type { MyCompaniesResponse } from "../../types/company";
+import type {
+  CompanyPaginationArgs,
+  MyCompaniesResponse,
+} from "../../types/company";
 
 import {
   getMyCompanies,
@@ -16,14 +19,25 @@ import {
   removeCompanyMember,
   acceptCompanyRequest,
   cancelMyRequest,
-  rejectCompanyRequest,
+  cancelCompanyInvitation,
+  promoteToAdmin,
+  demoteAdmin,
+  declineJoinRequest,
+  inviteUsersToCompanyBulk,
 } from "../../api/memberships";
 
 import type {
   CompanyInvitation,
   CompanyJoinRequest,
+  CompanyMembersResponse,
+  CompanyInvitationsResponse,
+  CompanyRequestsResponse,
   CompanyMember,
+  ChangeAdminRoleParams,
+  BulkInviteResponse,
+  InviteUsersBulkPayload,
 } from "../../types/membership";
+import type { PaginatedResponse, PaginationParams } from "../../types/common";
 
 export const fetchMyCompanies = createAsyncThunk<
   MyCompaniesResponse,
@@ -38,64 +52,73 @@ export const fetchMyCompanies = createAsyncThunk<
 });
 
 export const fetchMyInvitations = createAsyncThunk<
-  CompanyInvitation[],
-  void,
+  PaginatedResponse<CompanyInvitation>,
+  PaginationParams | void,
   { rejectValue: string }
->("membership/fetchMyInvitations", async (_, thunkAPI) => {
+>("membership/fetchMyInvitations", async (params, thunkAPI) => {
   try {
-    return await getMyInvitations();
+    return await getMyInvitations(params ?? {});
   } catch {
     return thunkAPI.rejectWithValue("Failed to load invitations");
   }
 });
 
 export const fetchMyRequests = createAsyncThunk<
-  CompanyJoinRequest[],
-  void,
+  PaginatedResponse<CompanyJoinRequest>,
+  PaginationParams | void,
   { rejectValue: string }
->("membership/fetchMyRequests", async (_, thunkAPI) => {
+>("membership/fetchMyRequests", async (params, thunkAPI) => {
   try {
-    return await getMyRequests();
+    return await getMyRequests(params ?? {});
   } catch {
     return thunkAPI.rejectWithValue("Failed to load requests");
   }
 });
 
 export const fetchCompanyMembers = createAsyncThunk<
-  CompanyMember[],
-  string,
+  CompanyMembersResponse,
+  CompanyPaginationArgs,
   { rejectValue: string }
->("membership/fetchCompanyMembers", async (companyId, thunkAPI) => {
-  try {
-    return await getCompanyMembers(companyId);
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to load members");
+>(
+  "membership/fetchCompanyMembers",
+  async ({ companyId, ...params }, thunkAPI) => {
+    try {
+      return await getCompanyMembers(companyId, params);
+    } catch {
+      return thunkAPI.rejectWithValue("Failed to load company members");
+    }
   }
-});
+);
 
 export const fetchCompanyInvitations = createAsyncThunk<
-  CompanyInvitation[],
-  string,
+  CompanyInvitationsResponse,
+  CompanyPaginationArgs,
   { rejectValue: string }
->("membership/fetchCompanyInvitations", async (companyId, thunkAPI) => {
-  try {
-    return await getCompanyInvitations(companyId);
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to load invitations");
+>(
+  "membership/fetchCompanyInvitations",
+  async ({ companyId, page = 1, size = 20 }, thunkAPI) => {
+    try {
+      return await getCompanyInvitations(companyId, { page, size });
+    } catch {
+      return thunkAPI.rejectWithValue("Failed to load company invitations");
+    }
   }
-});
+);
 
 export const fetchCompanyRequests = createAsyncThunk<
-  CompanyJoinRequest[],
-  string,
+  CompanyRequestsResponse,
+  CompanyPaginationArgs,
   { rejectValue: string }
->("membership/fetchCompanyRequests", async (companyId, thunkAPI) => {
-  try {
-    return await getCompanyRequests(companyId);
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to load requests");
+>(
+  "membership/fetchCompanyRequests",
+  async ({ companyId, page, size }, thunkAPI) => {
+    try {
+      return await getCompanyRequests(companyId, { page, size });
+    } catch {
+      return thunkAPI.rejectWithValue("Failed to load company requests");
+    }
   }
-});
+);
 
 export const leaveCompanyThunk = createAsyncThunk<
   string,
@@ -135,24 +158,25 @@ export const declineInvitationThunk = createAsyncThunk<
 });
 
 export const requestToJoinCompanyThunk = createAsyncThunk<
-  void,
+  CompanyJoinRequest,
   string,
   { rejectValue: string }
 >("membership/requestToJoinCompany", async (companyId, thunkAPI) => {
   try {
-    await requestToJoinCompany(companyId);
+    return await requestToJoinCompany(companyId);
   } catch {
     return thunkAPI.rejectWithValue("Failed to send join request");
   }
 });
 
 export const cancelMyRequestThunk = createAsyncThunk<
-  void,
+  string,
   string,
   { rejectValue: string }
 >("membership/cancelMyRequest", async (requestId, thunkAPI) => {
   try {
     await cancelMyRequest(requestId);
+    return requestId; // ⬅️ вручную возвращаем id
   } catch {
     return thunkAPI.rejectWithValue("Failed to cancel request");
   }
@@ -170,13 +194,13 @@ export const acceptCompanyRequestThunk = createAsyncThunk<
   }
 });
 
-export const rejectCompanyRequestThunk = createAsyncThunk<
+export const declineCompanyRequestThunk = createAsyncThunk<
   void,
   string,
   { rejectValue: string }
->("membership/rejectCompanyRequest", async (requestId, thunkAPI) => {
+>("membership/declineCompanyRequest", async (requestId, thunkAPI) => {
   try {
-    await rejectCompanyRequest(requestId);
+    await declineJoinRequest(requestId);
   } catch {
     return thunkAPI.rejectWithValue("Failed to reject request");
   }
@@ -191,5 +215,53 @@ export const removeCompanyMemberThunk = createAsyncThunk<
     await removeCompanyMember(companyId, userId);
   } catch {
     return thunkAPI.rejectWithValue("Failed to remove member");
+  }
+});
+
+export const cancelCompanyInvitationThunk = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: string }
+>("membership/cancelCompanyInvitation", async (invitationId, thunkAPI) => {
+  try {
+    await cancelCompanyInvitation(invitationId);
+  } catch {
+    return thunkAPI.rejectWithValue("Failed to cancel invitation");
+  }
+});
+
+export const promoteToAdminThunk = createAsyncThunk<
+  CompanyMember,
+  ChangeAdminRoleParams,
+  { rejectValue: string }
+>("membership/promoteToAdmin", async (params, thunkAPI) => {
+  try {
+    return await promoteToAdmin(params);
+  } catch {
+    return thunkAPI.rejectWithValue("Failed to promote member to admin");
+  }
+});
+
+export const demoteAdminThunk = createAsyncThunk<
+  CompanyMember,
+  ChangeAdminRoleParams,
+  { rejectValue: string }
+>("membership/demoteAdmin", async (params, thunkAPI) => {
+  try {
+    return await demoteAdmin(params);
+  } catch {
+    return thunkAPI.rejectWithValue("Failed to demote admin");
+  }
+});
+
+export const inviteUsersBulkThunk = createAsyncThunk<
+  BulkInviteResponse,
+  InviteUsersBulkPayload,
+  { rejectValue: string }
+>("membership/inviteUsersBulk", async (payload, thunkAPI) => {
+  try {
+    return await inviteUsersToCompanyBulk(payload);
+  } catch {
+    return thunkAPI.rejectWithValue("Failed to invite users");
   }
 });

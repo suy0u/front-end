@@ -75,10 +75,12 @@ const companiesSlice = createSlice({
       })
 
       .addCase(createCompanyThunk.fulfilled, (state, action) => {
+        state.loading = false;
         state.list.unshift(action.payload);
       })
 
       .addCase(updateCompanyThunk.fulfilled, (state, action) => {
+        state.loading = false;
         state.company = action.payload;
         state.list = state.list.map((c) =>
           c.id === action.payload.id ? action.payload : c
@@ -86,6 +88,7 @@ const companiesSlice = createSlice({
       })
 
       .addCase(deleteCompanyThunk.fulfilled, (state, action) => {
+        state.loading = false;
         const id = action.payload;
         state.list = state.list.filter((c) => c.id !== id);
         if (state.company?.id === id) {
