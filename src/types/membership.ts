@@ -1,7 +1,7 @@
 import type { MyCompany } from "./company";
 import type { PaginatedResponse } from "./common";
 
-export type MembershipStatus = "PENDING" | "ACCEPTED" | "DECLINED | CANCELED";
+export type MembershipStatus = "PENDING" | "ACCEPTED" | "DECLINED" | "CANCELED";
 export interface CompanyInvitation {
   id: string;
   company_id: string;

@@ -6,11 +6,16 @@ import {
   updateUserThunk,
   deleteUserThunk,
   uploadAvatarThunk,
+  searchUsersThunk,
 } from "../thunks/userThunks";
 
 interface UserState {
   list: User[];
   user: User | null;
+
+  search: User[];
+  searchLoading: boolean;
+
   loading: boolean;
   error: string | null;
   page: number;
@@ -20,6 +25,10 @@ interface UserState {
 const initialState: UserState = {
   list: [],
   user: null,
+
+  search: [],
+  searchLoading: false,
+
   loading: false,
   error: null,
   page: 1,
@@ -43,13 +52,13 @@ const usersSlice = createSlice({
       state.user = null;
       state.error = null;
     },
+    clearUserSearch(state) {
+      state.search = [];
+    },
   },
 
   extraReducers: (builder) => {
     builder
-      /* =========================
-         SPECIFIC fulfilled CASES
-         ========================= */
 
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
@@ -82,7 +91,18 @@ const usersSlice = createSlice({
       })
 
       .addCase(uploadAvatarThunk.fulfilled, (state, action) => {
+        state.loading = false;
         state.user = action.payload;
+      })
+      .addCase(searchUsersThunk.pending, (state) => {
+        state.searchLoading = true;
+      })
+      .addCase(searchUsersThunk.fulfilled, (state, action) => {
+        state.searchLoading = false;
+        state.search = Array.isArray(action.payload) ? action.payload : [];
+      })
+      .addCase(searchUsersThunk.rejected, (state) => {
+        state.searchLoading = false;
       })
 
       .addMatcher(isPending(...userThunks), (state) => {
@@ -97,5 +117,5 @@ const usersSlice = createSlice({
   },
 });
 
-export const { clearUser } = usersSlice.actions;
+export const { clearUser, clearUserSearch } = usersSlice.actions;
 export default usersSlice.reducer;
