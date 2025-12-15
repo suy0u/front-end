@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { InputAdornment } from "@mui/material";
 import { AppTextField } from "../TextFields/AppTextField";
-import { PasswordVisibilityToggle } from "../PasswordVisibilityToggle";
+import { PasswordVisibilityToggle } from "../Common/PasswordVisibilityToggle";
 
 interface PasswordFieldProps {
   label: string;
