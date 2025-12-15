@@ -1,3 +1,5 @@
+import type { CompanyRole } from "./membership";
+import type { PaginatedResponse } from "./common";
 export interface Company {
   id: string;
   name: string;
@@ -6,12 +8,7 @@ export interface Company {
   owner_id: string;
 }
 
-export interface CompaniesResponse {
-  items: Company[];
-  total: number;
-  page: number;
-  size: number;
-}
+export type CompaniesResponse = PaginatedResponse<Company>;
 
 export interface CreateCompanyPayload {
   name: string;
@@ -24,9 +21,6 @@ export interface UpdateCompanyPayload {
   description?: string;
   is_public?: boolean;
 }
-export type LeaveCompanyState = MyCompany | null;
-
-export type CompanyRole = "OWNER" | "ADMIN" | "MEMBER";
 
 export interface MyCompany {
   company_id: string;
@@ -35,9 +29,10 @@ export interface MyCompany {
   role: CompanyRole;
 }
 
-export interface MyCompaniesResponse {
-  items: MyCompany[];
-  total: number;
-  page: number;
-  size: number;
+export type MyCompaniesResponse = PaginatedResponse<MyCompany>;
+
+export interface CompanyPaginationArgs {
+  companyId: string;
+  page?: number;
+  size?: number;
 }
