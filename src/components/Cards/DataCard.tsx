@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import type { PaperProps } from "@mui/material";
 
 interface DataCardProps {
-  title?: string;
+  title?: ReactNode;
   subtitle?: string;
   to?: string;
   right?: ReactNode;
@@ -38,7 +38,11 @@ export function DataCard({
       }}
     >
       <Box sx={{ flex: 1 }}>
-        {title && <Typography sx={{ fontWeight: 700 }}>{title}</Typography>}
+        {title && (
+          <Typography component="div" sx={{ fontWeight: 700 }}>
+            {title}
+          </Typography>
+        )}
 
         {subtitle && (
           <Typography sx={{ opacity: 0.6, fontSize: "0.85rem" }}>
