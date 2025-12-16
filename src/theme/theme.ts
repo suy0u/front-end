@@ -232,5 +232,34 @@ export const theme = createTheme({
         }),
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          width: 50,
+          height: 50,
+          borderRadius: "50%",
+          backgroundColor: "#F9FFF6",
+          border: `2px solid ${theme.palette.custom.dark}`,
+          boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
+          transition: "all .2s ease",
+          color: theme.palette.custom.signInBg,
+
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 6px 0 rgba(0,0,0,0.25)",
+            backgroundColor: "#ffffff",
+          },
+
+          "&:active": {
+            transform: "translateY(2px)",
+            boxShadow: "none",
+          },
+
+          "& svg": {
+            fontSize: 28,
+          },
+        }),
+      },
+    },
   },
 });

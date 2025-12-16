@@ -102,3 +102,8 @@ Current examples
 
 ![Users](public/companies.png)
 ![User](public/company_info.png)
+
+### Authorization
+
+![Log In](public/sign_in.png)
+![Register](public/sign_up.png)
