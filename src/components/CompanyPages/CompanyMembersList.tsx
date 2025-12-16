@@ -124,14 +124,14 @@ export function CompanyMembersList({ companyId, isOwner }: Props) {
         <Chip
           size="md"
           label={t("membership.role.all")}
-          variant="roleMember"
+          variant={roleFilter === "ALL" ? "roleMember" : "inActive"}
           clickable
           onClick={() => setRoleFilter("ALL")}
         />
         <Chip
           size="md"
           label={t("membership.role.admins")}
-          variant="roleAdmin"
+          variant={roleFilter === ROLE.ADMIN ? "roleAdmin" : "inActive"}
           clickable
           onClick={() => setRoleFilter(ROLE.ADMIN)}
         />

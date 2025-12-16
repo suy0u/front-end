@@ -346,6 +346,12 @@ export const theme = createTheme({
             backgroundColor: theme.palette.custom.purple,
           }),
         },
+        {
+          props: { variant: "inActive" },
+          style: ({ theme }) => ({
+            backgroundColor: theme.palette.custom.cyan,
+          }),
+        },
       ],
     },
   },

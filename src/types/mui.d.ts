@@ -72,6 +72,7 @@ declare module "@mui/material/Chip" {
     roleOwner: true;
     roleAdmin: true;
     roleMember: true;
+    inActive: true;
   }
 
   interface ChipPropsSizeOverrides {
