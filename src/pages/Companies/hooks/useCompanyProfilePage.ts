@@ -8,6 +8,8 @@ import { fetchCompanyById } from "../../../store/thunks/companyThunks";
 import {
   fetchMyCompanies,
   leaveCompanyThunk,
+  fetchMyRequests,
+  fetchMyInvitations,
 } from "../../../store/thunks/membershipThunks";
 
 import type { LeaveCompanyState } from "../../../types/membership";
@@ -30,6 +32,8 @@ export function useCompanyProfilePage(id?: string) {
 
     dispatch(fetchCompanyById(id));
     dispatch(fetchMyCompanies());
+    dispatch(fetchMyRequests({ page: 1, size: 10 }));
+    dispatch(fetchMyInvitations({ page: 1, size: 10 }));
 
     return () => {
       dispatch(clearCompany());

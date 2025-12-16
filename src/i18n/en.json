@@ -44,7 +44,9 @@
     "decline": "Decline invitation",
     "decline_confirm": "Are you sure you want to decline the invitation?",
     "cancel": "Cancel invitation",
-    "cancel_confirm": "Are you sure you want to cancel the invitation?"
+    "cancel_confirm": "Are you sure you want to cancel the invitation?",
+    "invited": "Already invited",
+    "exists": "You already have an invitation to this company."
   },
   "request": {
     "requests": "Requests",
@@ -56,7 +58,9 @@
     "cancel": "Cancel request",
     "cancel_confirm": "Are you sure you want to cancel the request?",
     "join": "Join to company",
-    "join_confirm": "Are you sure you want to join to the company?"
+    "join_confirm": "Are you sure you want to join to the company?",
+    "pending": "Request pending",
+    "already_sent": "Request already sent."
   },
 
   "membership": {

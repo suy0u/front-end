@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, Tooltip, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
   fetchCompanyInvitations,
@@ -57,7 +57,15 @@ export default function CompanyActions({
     hasPendingRequest,
     hasInvitation,
   });
+  const shouldShowJoinButton = !isOwner && !myMembership;
 
+  console.log({
+    isOwner,
+    myMembership,
+    hasPendingRequest,
+    hasInvitation,
+    myRequests,
+  });
   return (
     <Stack direction="row" spacing={1}>
       {isOwner && (
@@ -79,16 +87,34 @@ export default function CompanyActions({
           {t("actions.leave")}
         </Button>
       )}
-      {canRequest && (
-        <Button
-          size="sm"
-          variant="green"
-          disabled={hasPendingRequest}
-          onClick={() => setRequestOpen(true)}
+      {shouldShowJoinButton && (
+        <Tooltip
+          title={
+            hasPendingRequest
+              ? t("request.already_sent")
+              : hasInvitation
+              ? t("invitation.exists")
+              : ""
+          }
+          disableHoverListener={canRequest}
         >
-          {hasPendingRequest ? t("company.request_pending") : t("actions.join")}
-        </Button>
+          <Box component="span">
+            <Button
+              size="sm"
+              variant="green"
+              disabled={!canRequest}
+              onClick={() => setRequestOpen(true)}
+            >
+              {hasPendingRequest
+                ? t("request.pending")
+                : hasInvitation
+                ? t("invitation.invited")
+                : t("actions.join")}
+            </Button>
+          </Box>
+        </Tooltip>
       )}
+
       <InviteUserModal
         open={inviteOpen}
         companyId={company.id}
