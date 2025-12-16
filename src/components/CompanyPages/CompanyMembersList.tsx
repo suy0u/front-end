@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Button, Stack, Typography, Chip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -48,6 +48,7 @@ export function CompanyMembersList({ companyId, isOwner }: Props) {
 
   const [page, setPage] = useState(1);
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
+  const [roleFilter, setRoleFilter] = useState<CompanyRole | "ALL">("ALL");
 
   const fetchMembers = useCallback(() => {
     dispatch(fetchCompanyMembers({ companyId, page, size: PAGE_SIZE }));
@@ -112,15 +113,36 @@ export function CompanyMembersList({ companyId, isOwner }: Props) {
     fetchMembers();
   };
 
+  const filteredMembers = useMemo(() => {
+    if (roleFilter === "ALL") return companyMembers;
+    return companyMembers.filter((m) => m.role === roleFilter);
+  }, [companyMembers, roleFilter]);
+
   return (
     <>
+      <Stack sx={{ mt: 6 }} direction="row" spacing={3}>
+        <Chip
+          size="md"
+          label={t("membership.role.all")}
+          variant="roleMember"
+          clickable
+          onClick={() => setRoleFilter("ALL")}
+        />
+        <Chip
+          size="md"
+          label={t("membership.role.admins")}
+          variant="roleAdmin"
+          clickable
+          onClick={() => setRoleFilter(ROLE.ADMIN)}
+        />
+      </Stack>
+
       <ListSection
-        title={t("membership.members")}
         loading={loading}
-        empty={companyMembers.length === 0}
+        empty={filteredMembers.length === 0}
         emptyText={t("errors.not_found")}
       >
-        {companyMembers.map((m) => (
+        {filteredMembers.map((m) => (
           <DataCard
             key={m.user_id}
             title={
