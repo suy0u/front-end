@@ -1,3 +1,5 @@
+import { Box, Button } from "@mui/material";
+
 interface PaginationProps {
   page: number;
   total: number;
@@ -14,9 +16,9 @@ export default function Pagination({
   const pages = Math.ceil(total / limit);
 
   return (
-    <div style={{ display: "flex", gap: 8 }}>
+    <Box style={{ display: "flex", gap: 8 }}>
       {Array.from({ length: pages }).map((_, i) => (
-        <button
+        <Button
           key={i}
           style={{
             padding: "6px 12px",
@@ -26,8 +28,8 @@ export default function Pagination({
           onClick={() => onChange(i + 1)}
         >
           {i + 1}
-        </button>
+        </Button>
       ))}
-    </div>
+    </Box>
   );
 }
