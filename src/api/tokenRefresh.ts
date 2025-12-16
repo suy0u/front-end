@@ -32,8 +32,10 @@ export const handleTokenRefresh = async (originalRequest: RetryableRequest) => {
   originalRequest._retry = true;
 
   try {
-    const res = await api.post("/api/auth/refresh", {
-      refresh_token: refreshToken,
+    const res = await api.post("/api/auth/refresh", null, {
+      params: {
+        refresh_token: refreshToken,
+      },
     });
 
     const { access_token, refresh_token } = res.data;

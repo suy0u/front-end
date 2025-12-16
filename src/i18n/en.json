@@ -5,5 +5,45 @@
     "companies": "Companies",
     "view": "View",
     "not_found": "Not found"
+  },
+
+  "profile": {
+    "user_profile": "User Profile",
+    "username": "Username",
+    "email": "Email",
+    "email_immutable": "Email cannot be changed",
+    "password": "Password",
+    "edit_profile": "Edit profile",
+    "delete_account": "Delete account",
+    "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone.",
+    "about": "About",
+    "avatar": "Avatar"
+  },
+
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "take_me_home": "Take me home",
+    "edit": "Edit",
+    "upload": "Upload"
+  },
+
+  "auth": {
+    "sign_in": "SIGN IN",
+    "sign_up": "Sign up",
+    "create_account": "CREATE ACCOUNT",
+    "or_continue_with": "Or continue with",
+    "logout": "Logout"
+  },
+
+  "errors": {
+    "page_not_found": "Looks like the page you are looking for is not here."
+  },
+
+  "common": {
+    "new": "New",
+    "confirm": "Confirm",
+    "required": "Required field"
   }
 }

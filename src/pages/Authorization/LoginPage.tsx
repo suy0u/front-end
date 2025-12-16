@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Typography, Button } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setTokens, clearRedirect } from "../../store/slices/authSlice";
 import { login } from "../../api/authorization";
 import { handleApiError } from "../../utils/errorHandler";
 import { AuthCard } from "../../components/Authorization/AuthorizationCard";
-import { AuthTextField } from "../../components/Authorization/AuthorizationTextField";
 import TimedAlert from "../../components/Alerts/TimedAlert";
 import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButtons";
+import { AppTextField } from "../../components/TextFields/AppTextField";
+import { PasswordField } from "../../components/TextFields/PasswordField";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
+
   const location = useLocation();
   const successMessage = location.state?.successMessage || null;
 
@@ -28,7 +32,11 @@ export default function LoginPage() {
     try {
       const data = await login(email, password);
       dispatch(
-        setTokens({ access: data.access_token, refresh: data.refresh_token })
+        setTokens({
+          access: data.access_token,
+          refresh: data.refresh_token,
+          user: data.user,
+        })
       );
 
       if (redirectPath) {
@@ -50,35 +58,34 @@ export default function LoginPage() {
         variant="h3"
         sx={{ textAlign: "center", fontWeight: 900, mb: 3, color: "#1d5b4e" }}
       >
-        SIGN IN
+        {t("auth.sign_in")}
       </Typography>
 
       <TimedAlert message={error} severity="error" />
 
       <form onSubmit={handleSubmit}>
-        <AuthTextField
-          label="Email"
+        <AppTextField
+          label={t("profile.email")}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
 
-        <AuthTextField
-          label="Password"
-          type="password"
+        <PasswordField
+          label={t("profile.password")}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
         />
 
         <Button fullWidth size="lg" variant="green" type="submit">
-          Login
+          {t("auth.sign_in")}
         </Button>
         <Typography
           sx={{ textAlign: "center", mt: 3, fontWeight: 700, color: "#1d5b4e" }}
         >
-          Or continue with
+          {t("auth.or_continue_with")}
         </Typography>
 
         <SocialAuthButtons />

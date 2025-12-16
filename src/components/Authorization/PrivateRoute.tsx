@@ -1,7 +1,7 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, Navigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { setRedirect } from "../../store/slices/authSlice";
-import type React from "react";
 
 export default function PrivateRoute({
   children,
@@ -12,8 +12,13 @@ export default function PrivateRoute({
   const dispatch = useAppDispatch();
   const location = useLocation();
 
+  useEffect(() => {
+    if (!token) {
+      dispatch(setRedirect(location.pathname));
+    }
+  }, [token, location.pathname, dispatch]);
+
   if (!token) {
-    dispatch(setRedirect(location.pathname));
     return <Navigate to="/login" replace />;
   }
 

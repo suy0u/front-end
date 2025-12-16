@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../store/hooks";
 import { setTokens } from "../../store/slices/authSlice";
 import { syncAuth } from "../../api/authorization";
 import { CircularProgress, Box } from "@mui/material";
+import { type AuthUser } from "../../types/user";
 
 export default function AuthCallback() {
   const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
@@ -22,7 +23,7 @@ export default function AuthCallback() {
       try {
         const token = await getAccessTokenSilently();
 
-        await syncAuth(
+        const backendUser = await syncAuth(
           {
             sub: safeUser.sub!,
             email: safeUser.email ?? null,
@@ -31,7 +32,13 @@ export default function AuthCallback() {
           token
         );
 
-        dispatch(setTokens({ access: token, user }));
+        const authUser: AuthUser = {
+          id: backendUser.id,
+          email: backendUser.email ?? "",
+          username: backendUser.username,
+        };
+
+        dispatch(setTokens({ access: token, user: authUser }));
         isSynced.current = true;
 
         navigate("/");
@@ -41,7 +48,7 @@ export default function AuthCallback() {
     }
 
     run();
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, dispatch, getAccessTokenSilently, navigate]);
 
   return (
     <Box

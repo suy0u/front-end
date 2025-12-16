@@ -11,6 +11,7 @@ declare module "@mui/material/styles" {
       green: string;
       dark: string;
       yellow: string;
+      orange: string;
 
       signInBg: string;
       signInHover: string;
@@ -35,6 +36,7 @@ declare module "@mui/material/Button" {
     blue: true;
     green: true;
     yellow: true;
+    orange: true;
     signIn: true;
     signUp: true;
   }

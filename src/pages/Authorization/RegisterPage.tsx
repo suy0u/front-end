@@ -1,14 +1,19 @@
 import { Typography, Button } from "@mui/material";
 import { AuthCard } from "../../components/Authorization/AuthorizationCard";
-import { AuthTextField } from "../../components/Authorization/AuthorizationTextField";
+
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { registerUser } from "../../api/authorization";
 import { handleApiError } from "../../utils/errorHandler";
 import TimedAlert from "../../components/Alerts/TimedAlert";
 import { SocialAuthButtons } from "../../components/Authorization/SocialAuthButtons";
+import { AppTextField } from "../../components/TextFields/AppTextField";
+import { PasswordField } from "../../components/TextFields/PasswordField";
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -37,42 +42,41 @@ export default function RegisterPage() {
         variant="h3"
         sx={{ textAlign: "center", fontWeight: 900, mb: 3, color: "#1d5b4e" }}
       >
-        CREATE ACCOUNT
+        {t("auth.create_account")}
       </Typography>
 
       <TimedAlert message={error} severity="error" />
 
       <form onSubmit={handleSubmit}>
-        <AuthTextField
-          label="Username"
+        <AppTextField
+          label={t("profile.username")}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
 
-        <AuthTextField
-          label="Email"
+        <AppTextField
+          label={t("profile.email")}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
 
-        <AuthTextField
-          label="Password"
-          type="password"
+        <PasswordField
+          label={t("profile.password")}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
         />
 
         <Button fullWidth size="lg" variant="purple" type="submit">
-          Register
+          {t("auth.sign_up")}
         </Button>
         <Typography
           sx={{ textAlign: "center", mt: 3, fontWeight: 700, color: "#1d5b4e" }}
         >
-          Or continue with
+          {t("auth.or_continue_with")}
         </Typography>
 
         <SocialAuthButtons />

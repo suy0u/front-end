@@ -1,17 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import type { AuthUser } from "../../types/user";
 
 interface AuthState {
   token: string | null;
   refreshToken: string | null;
-  user: unknown | null;
+  user: AuthUser | null;
   redirectAfterLogin: string | null;
 }
+
+const storedUser = localStorage.getItem("user");
 
 const initialState: AuthState = {
   token: localStorage.getItem("token"),
   refreshToken: localStorage.getItem("refreshToken"),
-  user: null,
+  user: storedUser ? JSON.parse(storedUser) : null,
   redirectAfterLogin: null,
 };
 
@@ -24,7 +27,7 @@ const authSlice = createSlice({
       action: PayloadAction<{
         access: string;
         refresh?: string | null;
-        user?: unknown;
+        user?: AuthUser;
       }>
     ) => {
       state.token = action.payload.access;
@@ -42,7 +45,7 @@ const authSlice = createSlice({
       }
     },
 
-    setUser: (state, action: PayloadAction<unknown>) => {
+    setUser: (state, action: PayloadAction<AuthUser>) => {
       state.user = action.payload;
     },
 
@@ -61,6 +64,7 @@ const authSlice = createSlice({
 
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
     },
   },
 });
