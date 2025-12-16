@@ -19,6 +19,7 @@ export const theme = createTheme({
       cyan: "#40ceb5",
       white: "#fff",
       dark_blue: "#003366",
+      grey: "#cececeff",
 
       signInBg: "#1C5F4A",
       signInHover: "#154538",
@@ -349,7 +350,8 @@ export const theme = createTheme({
         {
           props: { variant: "inActive" },
           style: ({ theme }) => ({
-            backgroundColor: theme.palette.custom.cyan,
+            backgroundColor: theme.palette.custom.grey,
+            color: theme.palette.custom.white,
           }),
         },
       ],

@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../store/hooks";
 
 export const FileTree = () => {
   const navigate = useNavigate();
+  const { user } = useAppSelector((s) => s.auth);
   return (
     <Box
       sx={{
@@ -20,6 +22,16 @@ export const FileTree = () => {
       }}
     >
       <Typography variant="body2">{"/"}</Typography>
+
+      {user && (
+        <Typography
+          variant="body2"
+          onClick={() => navigate(`/users/${user.id}`)}
+          sx={{ cursor: "pointer" }}
+        >
+          {"├─ profile/"}
+        </Typography>
+      )}
       <Typography
         variant="body2"
         onClick={() => navigate("/users")}

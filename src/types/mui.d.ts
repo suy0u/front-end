@@ -17,6 +17,7 @@ declare module "@mui/material/styles" {
       cyan: string;
       white: string;
       dark_blue: string;
+      grey: string;
 
       signInBg: string;
       signInHover: string;
@@ -48,6 +49,7 @@ declare module "@mui/material/Button" {
     cyan: true;
     white: true;
     dark_blue: true;
+    grey: true;
   }
 
   interface ButtonPropsSizeOverrides {

@@ -120,7 +120,18 @@ export function CompanyMembersList({ companyId, isOwner }: Props) {
 
   return (
     <>
-      <Stack sx={{ mt: 6 }} direction="row" spacing={3}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{
+          mt: 2,
+          p: 1,
+          backgroundColor: "rgba(255,255,255,0.7)",
+          borderRadius: "16px",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+          width: "fit-content",
+        }}
+      >
         <Chip
           size="md"
           label={t("membership.role.all")}
