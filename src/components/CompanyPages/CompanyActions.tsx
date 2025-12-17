@@ -59,13 +59,6 @@ export default function CompanyActions({
   });
   const shouldShowJoinButton = !isOwner && !myMembership;
 
-  console.log({
-    isOwner,
-    myMembership,
-    hasPendingRequest,
-    hasInvitation,
-    myRequests,
-  });
   return (
     <Stack direction="row" spacing={1}>
       {isOwner && (
