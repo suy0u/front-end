@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { useForm } from "react-hook-form";
 import AppModal from "../Modals/AppModal";
 
 interface Props {
@@ -22,6 +23,12 @@ export function ConfirmModal({
   onConfirm,
   onClose,
 }: Props) {
+  const { handleSubmit, formState } = useForm();
+
+  const onSubmit = () => {
+    onConfirm();
+  };
+
   return (
     <AppModal
       open={open}
@@ -29,7 +36,12 @@ export function ConfirmModal({
       title={title}
       actions={
         <>
-          <Button size="sm" variant={confirmVariant} onClick={onConfirm}>
+          <Button
+            size="sm"
+            variant={confirmVariant}
+            onClick={handleSubmit(onSubmit)}
+            disabled={formState.isSubmitting}
+          >
             {confirmText}
           </Button>
           <Button size="sm" variant="yellow" onClick={onClose}>

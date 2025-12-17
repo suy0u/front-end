@@ -47,14 +47,10 @@ const companiesSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-<<<<<<< HEAD
       .addCase(fetchCompanies.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-=======
-
->>>>>>> 6236636 (refactor(store): moved thunks to another folder)
       .addCase(fetchCompanies.fulfilled, (state, action) => {
         state.loading = false;
         state.list = action.payload.items;
@@ -62,13 +58,10 @@ const companiesSlice = createSlice({
         state.page = action.payload.page;
       })
 
-<<<<<<< HEAD
       .addCase(fetchCompanyById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-=======
->>>>>>> 6236636 (refactor(store): moved thunks to another folder)
       .addCase(fetchCompanyById.fulfilled, (state, action) => {
         state.loading = false;
         state.company = action.payload;

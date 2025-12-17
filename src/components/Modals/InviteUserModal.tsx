@@ -1,12 +1,16 @@
-import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useForm, Controller } from "react-hook-form";
 
 import AppModal from "./AppModal";
 import { useAppDispatch } from "../../store/hooks";
 import { inviteUsersBulkThunk } from "../../store/thunks/membershipThunks";
 import type { User } from "../../types/user";
 import { UserSearchAutocomplete } from "../UserPages/UserSearchAutocomplete";
+
+interface FormValues {
+  users: User[];
+}
 
 interface Props {
   companyId: string;
@@ -24,34 +28,40 @@ export default function InviteUserModal({
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  const [inviting, setInviting] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isSubmitting },
+  } = useForm<FormValues>({
+    defaultValues: {
+      users: [],
+    },
+  });
 
-  const handleInvite = async () => {
-    if (selectedUsers.length === 0) return;
+  const users = watch("users");
 
-    setInviting(true);
-    try {
-      const res = await dispatch(
-        inviteUsersBulkThunk({
-          companyId,
-          userIds: selectedUsers.map((u) => u.id),
-        })
-      ).unwrap();
+  const onSubmit = async ({ users }: FormValues) => {
+    if (users.length === 0) return;
 
-      if (res.skipped.length > 0) {
-        console.warn("Skipped users:", res.skipped);
-      }
+    const res = await dispatch(
+      inviteUsersBulkThunk({
+        companyId,
+        userIds: users.map((u) => u.id),
+      })
+    ).unwrap();
 
-      onSuccess?.();
-      handleClose();
-    } finally {
-      setInviting(false);
+    if (res.skipped.length > 0) {
+      console.warn("Skipped users:", res.skipped);
     }
+
+    onSuccess?.();
+    handleClose();
   };
 
   const handleClose = () => {
-    setSelectedUsers([]);
+    reset();
     onClose();
   };
 
@@ -65,10 +75,10 @@ export default function InviteUserModal({
           <Button
             size="sm"
             variant="green"
-            onClick={handleInvite}
-            disabled={selectedUsers.length === 0 || inviting}
+            onClick={handleSubmit(onSubmit)}
+            disabled={users.length === 0 || isSubmitting}
           >
-            {t("actions.invite")} ({selectedUsers.length})
+            {t("actions.invite")} ({users.length})
           </Button>
 
           <Button size="sm" variant="yellow" onClick={handleClose}>
@@ -78,10 +88,16 @@ export default function InviteUserModal({
       }
     >
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <UserSearchAutocomplete
-          companyId={companyId}
-          value={selectedUsers}
-          onChange={setSelectedUsers}
+        <Controller
+          name="users"
+          control={control}
+          render={({ field }) => (
+            <UserSearchAutocomplete
+              companyId={companyId}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
       </Box>
     </AppModal>

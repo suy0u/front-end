@@ -1,5 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
 
 import AppModal from "./AppModal";
 import { useAppDispatch } from "../../store/hooks";
@@ -21,8 +22,11 @@ export default function RequestJoinModal({
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const handleConfirm = async () => {
+  const { handleSubmit, formState } = useForm();
+
+  const onSubmit = async () => {
     await dispatch(requestToJoinCompanyThunk(companyId)).unwrap();
+
     onSuccess?.();
     onClose();
   };
@@ -34,7 +38,12 @@ export default function RequestJoinModal({
       title={t("request.join")}
       actions={
         <>
-          <Button size="sm" variant="green" onClick={handleConfirm}>
+          <Button
+            size="sm"
+            variant="green"
+            onClick={handleSubmit(onSubmit)}
+            disabled={formState.isSubmitting}
+          >
             {t("actions.confirm")}
           </Button>
           <Button size="sm" variant="yellow" onClick={onClose}>
