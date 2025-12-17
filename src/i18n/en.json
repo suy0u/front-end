@@ -16,17 +16,35 @@
     "edit_profile": "Edit profile",
     "delete_account": "Delete account",
     "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone.",
+    "delete_account_checkbox": "I understand this will permanently delete my account",
     "about": "About",
     "avatar": "Avatar"
   },
 
+  "company": {
+    "name": "Name",
+    "isprivate": "Private",
+    "ispublic": "Public",
+    "ispublic_message": "Is public company?",
+    "delete": "Delete company",
+    "create": "Create company",
+    "edit": "Edit company",
+    "description": "Description",
+    "delete_confirm": "Are you sure you want to delete the company? This action cannot be undone.",
+    "delete_company_checkbox": "I understand the consequences",
+    "leave_company": "Leave company",
+    "leave_company_confirm": "Are you sure you want to leave the company?"
+  },
+
   "actions": {
+    "create": "Create",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
     "take_me_home": "Take me home",
     "edit": "Edit",
-    "upload": "Upload"
+    "upload": "Upload",
+    "leave": "Leave"
   },
 
   "auth": {
@@ -38,12 +56,18 @@
   },
 
   "errors": {
-    "page_not_found": "Looks like the page you are looking for is not here."
+    "page_not_found": "Looks like the page you are looking for is not here.",
+    "not_found": "Not Found"
   },
 
   "common": {
     "new": "New",
     "confirm": "Confirm",
-    "required": "Required field"
+    "required": "Required field",
+    "my": "My"
+  },
+
+  "validation": {
+    "required": "{{field}} is required"
   }
 }

@@ -1,73 +1,113 @@
-import { Box, Typography, Chip, Button, Stack } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { users } from "../../ mocks/users";
-import { companies } from "../../ mocks/companies";
-import { DataCard } from "../../components/Cards/DataCard";
-import { PageCard } from "../../components/Cards/PageCard";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function CompanyProfilePage() {
-  const { id } = useParams();
-  const company = companies.find((c) => c.id === Number(id));
-  const { t } = useTranslation();
+import { PageCard } from "../../components/Cards/PageCard";
+import { EditCompanyModal } from "../../components/Modals/EditCompanyModal";
+import { DeleteCompanyModal } from "../../components/Modals/DeleteCompanyModal";
+import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
 
-  if (!company) {
-    return <Typography>{t("app.not_found")}</Typography>;
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  fetchCompanyById,
+  clearCompany,
+} from "../../store/slices/companySlice";
+import { leaveCompanyThunk } from "../../store/slices/membershipSlice";
+
+import CompanyHeader from "../../components/CompanyPages/CompanyHeader";
+import CompanyDescription from "../../components/CompanyPages/CompanyDescription";
+
+import type { MyCompany, LeaveCompanyState } from "../../types/company";
+
+export default function CompanyProfilePage() {
+  const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const { company, loading, error } = useAppSelector(
+    (state) => state.companies
+  );
+  const authUser = useAppSelector((state) => state.auth.user);
+  const myCompanies = useAppSelector((state) => state.membership.myCompanies);
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [leaveCompany, setLeaveCompany] = useState<LeaveCompanyState>(null);
+
+  useEffect(() => {
+    if (id) dispatch(fetchCompanyById(id));
+    return () => {
+      dispatch(clearCompany());
+    };
+  }, [dispatch, id]);
+
+  const myMembership: MyCompany | undefined = useMemo(
+    () => myCompanies.find((c) => c.company_id === id),
+    [myCompanies, id]
+  );
+
+  const isOwner = authUser?.id === company?.owner_id;
+  const canLeave = Boolean(myMembership && !isOwner);
+
+  const handleLeaveConfirm = async () => {
+    if (!leaveCompany) return;
+    await dispatch(leaveCompanyThunk(leaveCompany.company_id)).unwrap();
+    setLeaveCompany(null);
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ py: 6, textAlign: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
-  const companyUsers = users
-    .filter((u) => u.companies?.some((c) => c.companyId === company.id))
-    .map((u) => ({
-      ...u,
-      role: u.companies.find((c) => c.companyId === company.id)?.role,
-    }));
-
-  const userCount = companyUsers.length;
+  if (error || !company) {
+    return (
+      <Typography sx={{ py: 6, textAlign: "center" }}>
+        {t("app.not_found")}
+      </Typography>
+    );
+  }
 
   return (
     <Box sx={{ py: 6 }}>
       <PageCard>
-        <Typography variant="h4" sx={{ fontWeight: 900, mb: 2 }}>
-          {company.name}
-        </Typography>
-
-        <Chip
-          label={`${t("app.users")}: ${userCount}`}
-          sx={{
-            bgcolor: "#00A779",
-            color: "white",
-            borderRadius: "10px",
-            fontWeight: 700,
-          }}
+        <CompanyHeader
+          company={company}
+          isOwner={isOwner}
+          canLeave={canLeave}
+          onEdit={() => setEditOpen(true)}
+          onDelete={() => setDeleteOpen(true)}
+          onLeave={() => setLeaveCompany(myMembership!)}
         />
 
-        <Typography sx={{ mt: 2 }}>{company.description}</Typography>
+        <CompanyDescription description={company.description} />
       </PageCard>
 
-      <Typography variant="h5" sx={{ fontWeight: 900, mb: 2 }}>
-        {t("app.users")}
-      </Typography>
-
-      <Stack spacing={2}>
-        {companyUsers.map((user) => (
-          <DataCard
-            title={user.name}
-            subtitle={user.role}
-            to={`/users/${user.id}`}
-            right={
-              <Button size="sm" variant="purple">
-                {t("app.view")}
-              </Button>
-            }
-            paperProps={{ variant: "userCard" }}
+      {isOwner && (
+        <>
+          <EditCompanyModal
+            open={editOpen}
+            onClose={() => setEditOpen(false)}
+            company={company}
           />
-        ))}
-      </Stack>
+          <DeleteCompanyModal
+            open={deleteOpen}
+            onClose={() => setDeleteOpen(false)}
+            companyId={company.id}
+          />
+        </>
+      )}
 
-      {companyUsers.length === 0 && (
-        <Typography sx={{ opacity: 0.7, mt: 2 }}>
-          {t("app.not_found")}
-        </Typography>
+      {canLeave && (
+        <LeaveCompanyModal
+          company={leaveCompany}
+          onClose={() => setLeaveCompany(null)}
+          onConfirm={handleLeaveConfirm}
+        />
       )}
     </Box>
   );

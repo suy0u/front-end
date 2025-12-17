@@ -40,7 +40,7 @@ export const fetchUsers = createAsyncThunk<
 
 export const fetchUserById = createAsyncThunk<
   User,
-  number,
+  string,
   { rejectValue: string }
 >("users/fetchById", async (id, thunkAPI) => {
   try {
@@ -52,7 +52,7 @@ export const fetchUserById = createAsyncThunk<
 
 export const updateUserThunk = createAsyncThunk<
   User,
-  { id: number; data: UpdateUserPayload },
+  { id: string; data: UpdateUserPayload },
   { rejectValue: string }
 >("users/update", async ({ data }, thunkAPI) => {
   try {
@@ -64,8 +64,8 @@ export const updateUserThunk = createAsyncThunk<
 });
 
 export const deleteUserThunk = createAsyncThunk<
-  number,
-  number,
+  string,
+  string,
   { rejectValue: string }
 >("users/delete", async (id, thunkAPI) => {
   try {

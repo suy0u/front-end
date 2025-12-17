@@ -1,13 +1,13 @@
-import { useState, useCallback, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Box, CircularProgress } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography, CircularProgress, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-import AppModal from "../../components/Modals/AppModal";
-import { PageCard } from "../../components/Cards/PageCard";
-import { UserProfileForm } from "../../components/UserPages/UserProfileForm";
-import { UserProfileActions } from "../../components/UserPages/UserProfileActions";
 import NotFoundPage from "../NotFoundPage";
+import UserProfileHeader from "../../components/UserPages/UserProfileHeader";
+import UserCompaniesSection from "../../components/UserPages/UserCompaniesSection";
+import DeleteAccountModal from "../../components/Modals/Users/DeleteAccountModal";
+import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
@@ -17,14 +17,21 @@ import {
   uploadAvatarThunk,
 } from "../../store/slices/userSlice";
 import { logout } from "../../store/slices/authSlice";
-import { type UpdateUserPayload } from "../../types/user";
+import {
+  fetchMyCompanies,
+  leaveCompanyThunk,
+} from "../../store/slices/membershipSlice";
 
-interface EditUserData {
-  username: string;
-  password: string;
-  about: string;
-  avatar_url: string;
-}
+import { type EditUserData } from "../../types/user";
+import type { UpdateUserPayload } from "../../types/user";
+import type { LeaveCompanyState } from "../../types/company";
+
+const emptyEditData: EditUserData = {
+  username: "",
+  password: "",
+  about: "",
+  avatar_url: "",
+};
 
 export default function UserProfilePage() {
   const { t } = useTranslation();
@@ -34,84 +41,70 @@ export default function UserProfilePage() {
 
   const { user, loading, error } = useAppSelector((s) => s.users);
   const authUser = useAppSelector((s) => s.auth.user);
+  const membership = useAppSelector((s) => s.membership);
 
-  const isSelf = Number(id) === authUser?.id;
+  const isSelf = id === authUser?.id;
 
   const [editMode, setEditMode] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [editData, setEditData] = useState<EditUserData>({
-    username: "",
-    password: "",
-    about: "",
-    avatar_url: "",
-  });
+  const [editData, setEditData] = useState(emptyEditData);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [leaveCompany, setLeaveCompany] = useState<LeaveCompanyState>(null);
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchUserById(Number(id)));
-    }
-  }, [id, dispatch]);
+    if (!id) return;
+
+    dispatch(fetchUserById(id));
+    if (isSelf) dispatch(fetchMyCompanies());
+  }, [id, isSelf, dispatch]);
 
   const startEdit = () => {
     if (!user) return;
-
     setEditData({
       username: user.username ?? "",
-      password: user.password ?? "",
+      password: "",
       about: user.about ?? "",
       avatar_url: user.avatar_url ?? "",
     });
-
     setEditMode(true);
   };
 
-  const handleSave = useCallback(async () => {
+  const saveProfile = async () => {
     if (!id) return;
 
     const payload: UpdateUserPayload = {
       username: editData.username,
       about: editData.about,
       avatar_url: editData.avatar_url,
+      ...(editData.password && { password: editData.password }),
     };
 
-    const passwordChanged = Boolean(editData.password);
+    await dispatch(updateUserThunk({ id, data: payload })).unwrap();
 
-    if (passwordChanged) {
-      payload.password = editData.password;
-    }
-
-    await dispatch(
-      updateUserThunk({
-        id: Number(id),
-        data: payload,
-      })
-    ).unwrap();
-
-    if (passwordChanged) {
+    if (editData.password) {
       dispatch(logout());
       navigate("/login");
       return;
     }
 
     setEditMode(false);
-  }, [dispatch, id, editData, navigate]);
+  };
 
-  const handleDelete = useCallback(() => {
+  const deleteAccount = async () => {
     if (!id) return;
+    await dispatch(deleteUserThunk(id));
+    dispatch(logout());
+    navigate("/login");
+  };
 
-    dispatch(deleteUserThunk(Number(id))).then(() => {
-      dispatch(logout());
-      navigate("/login");
-    });
-  }, [dispatch, id, navigate]);
+  const uploadAvatar = async (file: File) => {
+    const updated = await dispatch(uploadAvatarThunk(file)).unwrap();
+    setEditData((p) => ({ ...p, avatar_url: updated.avatar_url ?? "" }));
+  };
 
-  const handleAvatarUpload = async (file: File) => {
-    const updatedUser = await dispatch(uploadAvatarThunk(file)).unwrap();
-
-    setEditData((prev) => ({
-      ...prev,
-      avatar_url: updatedUser.avatar_url ?? "",
-    }));
+  const leaveSelectedCompany = async () => {
+    if (!leaveCompany) return;
+    await dispatch(leaveCompanyThunk(leaveCompany.company_id)).unwrap();
+    setLeaveCompany(null);
   };
 
   if (loading) {
@@ -128,55 +121,37 @@ export default function UserProfilePage() {
 
   return (
     <Box sx={{ py: 6 }}>
-      <PageCard>
-        <Typography variant="h4" sx={{ fontWeight: 900, mb: 3 }}>
-          {t("profile.user_profile")}
-        </Typography>
+      <UserProfileHeader
+        user={user}
+        isSelf={isSelf}
+        editMode={editMode}
+        editData={editData}
+        onEdit={startEdit}
+        onSave={saveProfile}
+        onCancel={() => setEditMode(false)}
+        onDelete={() => setDeleteOpen(true)}
+        onAvatarUpload={uploadAvatar}
+        onChange={setEditData}
+      />
 
-        <UserProfileForm
-          username={editMode ? editData.username : user.username}
-          about={editMode ? editData.about : user.about}
-          avatarUrl={editMode ? editData.avatar_url : user.avatar_url}
-          onAvatarUpload={handleAvatarUpload}
-          email={user.email}
-          authProviderId={user.auth_provider_id}
-          editMode={editMode}
-          onChange={(field, value) =>
-            setEditData((prev) => ({ ...prev, [field]: value }))
-          }
+      {isSelf && (
+        <UserCompaniesSection
+          membership={membership}
+          onLeaveClick={setLeaveCompany}
         />
+      )}
 
-        <UserProfileActions
-          isSelf={isSelf}
-          editMode={editMode}
-          onEdit={startEdit}
-          onSave={handleSave}
-          onCancel={() => setEditMode(false)}
-          onDelete={() => setDeleteModalOpen(true)}
-        />
-      </PageCard>
+      <DeleteAccountModal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={deleteAccount}
+      />
 
-      <AppModal
-        open={deleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-        title={t("profile.delete_account")}
-        actions={
-          <>
-            <Button size="sm" variant="orange" onClick={handleDelete}>
-              {t("actions.delete")}
-            </Button>
-            <Button
-              size="sm"
-              variant="yellow"
-              onClick={() => setDeleteModalOpen(false)}
-            >
-              {t("actions.cancel")}
-            </Button>
-          </>
-        }
-      >
-        {t("profile.delete_account_confirm")}
-      </AppModal>
+      <LeaveCompanyModal
+        company={leaveCompany}
+        onClose={() => setLeaveCompany(null)}
+        onConfirm={leaveSelectedCompany}
+      />
     </Box>
   );
 }
