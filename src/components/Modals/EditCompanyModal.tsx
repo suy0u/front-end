@@ -1,10 +1,12 @@
 import { Button, Stack, Switch, FormControlLabel } from "@mui/material";
 import AppModal from "./AppModal";
-import { useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { updateCompanyThunk } from "../../store/slices/companySlice";
 import type { Company, UpdateCompanyPayload } from "../../types/company";
 import { AppTextField } from "../../components/TextFields/AppTextField";
+import { useForm, Controller } from "react-hook-form";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface EditCompanyModalProps {
   open: boolean;
@@ -18,15 +20,33 @@ export function EditCompanyModal({
   company,
 }: EditCompanyModalProps) {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
-  const [form, setForm] = useState<UpdateCompanyPayload>({
-    name: company.name,
-    description: company.description ?? "",
-    is_public: company.is_public,
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<UpdateCompanyPayload>({
+    defaultValues: {
+      name: company.name,
+      description: company.description ?? "",
+      is_public: company.is_public,
+    },
   });
 
-  const submit = async () => {
-    await dispatch(updateCompanyThunk({ id: company.id, data: form })).unwrap();
+  useEffect(() => {
+    if (open) {
+      reset({
+        name: company.name,
+        description: company.description ?? "",
+        is_public: company.is_public,
+      });
+    }
+  }, [open, company, reset]);
+
+  const onSubmit = async (data: UpdateCompanyPayload) => {
+    await dispatch(updateCompanyThunk({ id: company.id, data })).unwrap();
     onClose();
   };
 
@@ -34,53 +54,71 @@ export function EditCompanyModal({
     <AppModal
       open={open}
       onClose={onClose}
-      title="Edit company"
+      title={t("company.edit")}
       actions={
         <>
-          <Button size="md" variant="purple" onClick={submit}>
-            Save
+          <Button
+            size="md"
+            variant="purple"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
+          >
+            {t("actions.save")}
           </Button>
           <Button size="md" variant="yellow" onClick={onClose}>
-            Cancel
+            {t("actions.cancel")}
           </Button>
         </>
       }
     >
-      <Stack>
-        <AppTextField
-          label="Company name"
-          type="email"
-          value={form.name}
-          onChange={(e) =>
-            setForm((prev) => ({ ...prev, name: e.target.value }))
-          }
-          fullWidth
+      <Stack spacing={2}>
+        <Controller
+          name="name"
+          control={control}
+          rules={{
+            required: t("validation.required", {
+              field: t("company.name"),
+            }),
+          }}
+          render={({ field, fieldState }) => (
+            <AppTextField
+              {...field}
+              label={t("company.name")}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+              fullWidth
+            />
+          )}
         />
 
-        <AppTextField
-          label="Description"
-          multiline
-          rows={3}
-          value={form.description}
-          onChange={(e) =>
-            setForm((prev) => ({ ...prev, description: e.target.value }))
-          }
-          fullWidth
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <AppTextField
+              {...field}
+              label={t("company.description")}
+              multiline
+              rows={3}
+              fullWidth
+            />
+          )}
         />
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={form.is_public}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  is_public: e.target.checked,
-                }))
+        <Controller
+          name="is_public"
+          control={control}
+          render={({ field }) => (
+            <FormControlLabel
+              label={t("company.ispublic_message")}
+              control={
+                <Switch
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                />
               }
             />
-          }
-          label="Public company"
+          )}
         />
       </Stack>
     </AppModal>

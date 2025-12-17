@@ -1,10 +1,11 @@
 import { Stack, Switch, FormControlLabel, Button } from "@mui/material";
 import AppModal from "./AppModal";
-import { useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import { createCompanyThunk } from "../../store/slices/companySlice";
 import type { CreateCompanyPayload } from "../../types/company";
 import { AppTextField } from "../../components/TextFields/AppTextField";
+import { useForm, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface CreateCompanyModalProps {
   open: boolean;
@@ -13,15 +14,22 @@ interface CreateCompanyModalProps {
 
 export function CreateCompanyModal({ open, onClose }: CreateCompanyModalProps) {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
-  const [form, setForm] = useState<CreateCompanyPayload>({
-    name: "",
-    description: "",
-    is_public: true,
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<CreateCompanyPayload>({
+    defaultValues: {
+      name: "",
+      description: "",
+      is_public: true,
+    },
   });
 
-  const submit = async () => {
-    await dispatch(createCompanyThunk(form)).unwrap();
+  const onSubmit = async (data: CreateCompanyPayload) => {
+    await dispatch(createCompanyThunk(data)).unwrap();
     onClose();
   };
 
@@ -29,10 +37,15 @@ export function CreateCompanyModal({ open, onClose }: CreateCompanyModalProps) {
     <AppModal
       open={open}
       onClose={onClose}
-      title="Create company"
+      title={t("company.create")}
       actions={
         <>
-          <Button size="md" variant="purple" onClick={submit}>
+          <Button
+            size="md"
+            variant="purple"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
+          >
             Create
           </Button>
           <Button size="md" variant="yellow" onClick={onClose}>
@@ -41,37 +54,54 @@ export function CreateCompanyModal({ open, onClose }: CreateCompanyModalProps) {
         </>
       }
     >
-      <Stack>
-        <AppTextField
-          label="Company name"
-          type="email"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          fullWidth
+      <Stack spacing={2}>
+        <Controller
+          name="name"
+          control={control}
+          rules={{
+            required: t("validation.required", {
+              field: t("company.name"),
+            }),
+          }}
+          render={({ field, fieldState }) => (
+            <AppTextField
+              {...field}
+              label={t("company.name")}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+              fullWidth
+            />
+          )}
         />
 
-        <AppTextField
-          label="Description"
-          multiline
-          rows={3}
-          value={form.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-          fullWidth
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <AppTextField
+              {...field}
+              label={t("company.description")}
+              multiline
+              rows={3}
+              fullWidth
+            />
+          )}
         />
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={form.is_public}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  is_public: e.target.checked,
-                }))
+        <Controller
+          name="is_public"
+          control={control}
+          render={({ field }) => (
+            <FormControlLabel
+              label={t("company.ispublic_message")}
+              control={
+                <Switch
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                />
               }
             />
-          }
-          label="Public company"
+          )}
         />
       </Stack>
     </AppModal>

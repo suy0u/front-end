@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AppModal from "../../components/Modals/AppModal";
 import type { MyCompany } from "../../types/company";
+import { useForm } from "react-hook-form";
 
 interface Props {
   company: MyCompany | null;
@@ -16,6 +17,12 @@ export default function LeaveCompanyModal({
 }: Props) {
   const { t } = useTranslation();
 
+  const { handleSubmit, formState } = useForm();
+
+  const onSubmit = () => {
+    onConfirm();
+  };
+
   return (
     <AppModal
       open={!!company}
@@ -23,7 +30,12 @@ export default function LeaveCompanyModal({
       title={t("company.leave_company")}
       actions={
         <>
-          <Button size="sm" variant="orange" onClick={onConfirm}>
+          <Button
+            size="sm"
+            variant="orange"
+            onClick={handleSubmit(onSubmit)}
+            disabled={formState.isSubmitting}
+          >
             {t("actions.leave")}
           </Button>
           <Button size="sm" variant="yellow" onClick={onClose}>
@@ -32,7 +44,9 @@ export default function LeaveCompanyModal({
         </>
       }
     >
-      {t("company.leave_company_confirm", { name: company?.name })}
+      {t("company.leave_company_confirm", {
+        name: company?.name,
+      })}
     </AppModal>
   );
 }

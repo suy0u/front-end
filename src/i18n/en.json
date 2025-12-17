@@ -16,6 +16,7 @@
     "edit_profile": "Edit profile",
     "delete_account": "Delete account",
     "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone.",
+    "delete_account_checkbox": "I understand this will permanently delete my account",
     "about": "About",
     "avatar": "Avatar"
   },
@@ -24,8 +25,13 @@
     "name": "Name",
     "isprivate": "Private",
     "ispublic": "Public",
-    "delete_company": "Delete company",
-    "delete_company_confirm": "Are you sure you want to delete the company? This action cannot be undone.",
+    "ispublic_message": "Is public company?",
+    "delete": "Delete company",
+    "create": "Create company",
+    "edit": "Edit company",
+    "description": "Description",
+    "delete_confirm": "Are you sure you want to delete the company? This action cannot be undone.",
+    "delete_company_checkbox": "I understand the consequences",
     "leave_company": "Leave company",
     "leave_company_confirm": "Are you sure you want to leave the company?"
   },
@@ -59,5 +65,9 @@
     "confirm": "Confirm",
     "required": "Required field",
     "my": "My"
+  },
+
+  "validation": {
+    "required": "{{field}} is required"
   }
 }
