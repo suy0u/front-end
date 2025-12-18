@@ -54,7 +54,7 @@ export function useCompanyProfilePage(id?: string) {
     await dispatch(leaveCompanyThunk(companyToLeave.company_id)).unwrap();
 
     setCompanyToLeave(null);
-    navigate("/companies"); // при желании
+    navigate("/companies");
   };
 
   return {
