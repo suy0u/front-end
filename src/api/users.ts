@@ -32,3 +32,19 @@ export const uploadUserAvatar = (file: File): Promise<User> => {
     "uploadUserAvatar"
   );
 };
+
+export const searchUsers = (
+  query: string,
+  companyId: string,
+  limit = 10
+): Promise<User[]> =>
+  withCatch<User[]>(
+    api.get("/api/users/search", {
+      params: {
+        q: query,
+        company_id: companyId,
+        limit,
+      },
+    }),
+    "searchUsers"
+  );

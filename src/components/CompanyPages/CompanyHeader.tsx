@@ -45,6 +45,7 @@ export default function CompanyHeader({
 
       <CompanyActions
         isOwner={isOwner}
+        company={company}
         canLeave={canLeave}
         onEdit={onEdit}
         onDelete={onDelete}

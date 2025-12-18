@@ -36,6 +36,50 @@
     "leave_company_confirm": "Are you sure you want to leave the company?"
   },
 
+  "invitation": {
+    "invitations": "Invitations",
+    "proposed_invitations": "Proposed invitations",
+    "accept": "Accept invitation",
+    "accept_confirm": "Are you sure you want to accept the invitation?",
+    "decline": "Decline invitation",
+    "decline_confirm": "Are you sure you want to decline the invitation?",
+    "cancel": "Cancel invitation",
+    "cancel_confirm": "Are you sure you want to cancel the invitation?",
+    "invited": "Already invited",
+    "exists": "You already have an invitation to this company."
+  },
+  "request": {
+    "requests": "Requests",
+    "join_requests": "Join requests",
+    "accept": "Accept request",
+    "accept_confirm": "Are you sure you want to accept the request?",
+    "reject": "Reject request",
+    "reject_confirm": "Are you sure you want to reject the request?",
+    "cancel": "Cancel request",
+    "cancel_confirm": "Are you sure you want to cancel the request?",
+    "join": "Join to company",
+    "join_confirm": "Are you sure you want to join to the company?",
+    "pending": "Request pending",
+    "already_sent": "Request already sent."
+  },
+
+  "membership": {
+    "members": "Members",
+    "delete": "Remove member",
+    "delete_confirm": "Are you sure you want to remove this member?",
+    "promote": "Promote to admin",
+    "promote_confirm": "Are you sure you want to promote this member to admin?",
+    "demote": "Demote to member",
+    "demote_confirm": "Are you sure you want to demote this member to common member?"
+  },
+
+  "search": {
+    "name": "Search",
+    "user": {
+      "placeholder": "Enter user name|email "
+    }
+  },
+
   "actions": {
     "create": "Create",
     "save": "Save",
@@ -44,7 +88,16 @@
     "take_me_home": "Take me home",
     "edit": "Edit",
     "upload": "Upload",
-    "leave": "Leave"
+    "leave": "Leave",
+    "accept": "Accept",
+    "decline": "Decline",
+    "confirm": "Confirm",
+    "reject": "Reject",
+    "promote": "Promote",
+    "demote": "Demote",
+    "remove": "Remove",
+    "invite": "Invite",
+    "join": "Join"
   },
 
   "auth": {

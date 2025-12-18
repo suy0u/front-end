@@ -2,11 +2,11 @@ import { useEffect, useCallback } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-import Pagination from "../../components/Pagination";
+import Pagination from "../../components/Common/Pagination";
 import { UsersList } from "../../components/UserPages/UserList";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchUsers } from "../../store/slices/userSlice";
+import { fetchUsers } from "../../store/thunks/userThunks";
 
 const USERS_PER_PAGE = 10;
 

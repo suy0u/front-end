@@ -1,17 +1,12 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, isPending, isRejectedWithValue } from "@reduxjs/toolkit";
+import type { Company } from "../../types/company";
 import {
-  getCompanies,
-  getCompanyById,
-  createCompany,
-  updateCompany,
-  deleteCompany,
-} from "../../api/companies";
-import type {
-  Company,
-  CompaniesResponse,
-  CreateCompanyPayload,
-  UpdateCompanyPayload,
-} from "../../types/company";
+  fetchCompanies,
+  fetchCompanyById,
+  createCompanyThunk,
+  updateCompanyThunk,
+  deleteCompanyThunk,
+} from "../thunks/companyThunks";
 
 interface CompaniesState {
   list: Company[];
@@ -31,66 +26,13 @@ const initialState: CompaniesState = {
   total: 0,
 };
 
-export const fetchCompanies = createAsyncThunk<
-  CompaniesResponse,
-  { page: number; size: number },
-  { rejectValue: string }
->("companies/fetchAll", async ({ page, size }, thunkAPI) => {
-  try {
-    return await getCompanies(page, size);
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to load companies");
-  }
-});
-
-export const fetchCompanyById = createAsyncThunk<
-  Company,
-  string,
-  { rejectValue: string }
->("companies/fetchById", async (id, thunkAPI) => {
-  try {
-    return await getCompanyById(id);
-  } catch {
-    return thunkAPI.rejectWithValue("Company not found");
-  }
-});
-
-export const createCompanyThunk = createAsyncThunk<
-  Company,
-  CreateCompanyPayload,
-  { rejectValue: string }
->("companies/create", async (data, thunkAPI) => {
-  try {
-    return await createCompany(data);
-  } catch {
-    return thunkAPI.rejectWithValue("Create company failed");
-  }
-});
-
-export const updateCompanyThunk = createAsyncThunk<
-  Company,
-  { id: string; data: UpdateCompanyPayload },
-  { rejectValue: string }
->("companies/update", async ({ id, data }, thunkAPI) => {
-  try {
-    return await updateCompany(id, data);
-  } catch {
-    return thunkAPI.rejectWithValue("Update company failed");
-  }
-});
-
-export const deleteCompanyThunk = createAsyncThunk<
-  string,
-  string,
-  { rejectValue: string }
->("companies/delete", async (id, thunkAPI) => {
-  try {
-    await deleteCompany(id);
-    return id;
-  } catch {
-    return thunkAPI.rejectWithValue("Delete company failed");
-  }
-});
+const companyThunks = [
+  fetchCompanies,
+  fetchCompanyById,
+  createCompanyThunk,
+  updateCompanyThunk,
+  deleteCompanyThunk,
+] as const;
 
 const companiesSlice = createSlice({
   name: "companies",
@@ -115,10 +57,6 @@ const companiesSlice = createSlice({
         state.total = action.payload.total;
         state.page = action.payload.page;
       })
-      .addCase(fetchCompanies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload ?? "Failed to load companies";
-      })
 
       .addCase(fetchCompanyById.pending, (state) => {
         state.loading = true;
@@ -128,17 +66,14 @@ const companiesSlice = createSlice({
         state.loading = false;
         state.company = action.payload;
       })
-      .addCase(fetchCompanyById.rejected, (state, action) => {
-        state.loading = false;
-        state.company = null;
-        state.error = action.payload ?? "Company not found";
-      })
 
       .addCase(createCompanyThunk.fulfilled, (state, action) => {
+        state.loading = false;
         state.list.unshift(action.payload);
       })
 
       .addCase(updateCompanyThunk.fulfilled, (state, action) => {
+        state.loading = false;
         state.company = action.payload;
         state.list = state.list.map((c) =>
           c.id === action.payload.id ? action.payload : c
@@ -146,11 +81,22 @@ const companiesSlice = createSlice({
       })
 
       .addCase(deleteCompanyThunk.fulfilled, (state, action) => {
+        state.loading = false;
         const id = action.payload;
         state.list = state.list.filter((c) => c.id !== id);
         if (state.company?.id === id) {
           state.company = null;
         }
+      })
+
+      .addMatcher(isPending(...companyThunks), (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addMatcher(isRejectedWithValue(...companyThunks), (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Request failed";
       });
   },
 });

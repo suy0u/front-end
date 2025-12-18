@@ -1,7 +1,7 @@
 import { Button, Stack, Switch, FormControlLabel } from "@mui/material";
 import AppModal from "./AppModal";
 import { useAppDispatch } from "../../store/hooks";
-import { updateCompanyThunk } from "../../store/slices/companySlice";
+import { updateCompanyThunk } from "../../store/thunks/companyThunks";
 import type { Company, UpdateCompanyPayload } from "../../types/company";
 import { AppTextField } from "../../components/TextFields/AppTextField";
 import { useForm, Controller } from "react-hook-form";
