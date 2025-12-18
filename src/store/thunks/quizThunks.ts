@@ -9,6 +9,7 @@ import type {
   QuizSubmission,
   QuizStat,
   QuizDetails,
+  ListQuizzesArgs,
 } from "../../types/quiz";
 
 export const createQuizThunk = createAsyncThunk<
@@ -25,11 +26,15 @@ export const createQuizThunk = createAsyncThunk<
 
 export const listQuizzesThunk = createAsyncThunk<
   { items: Quiz[]; total: number; page: number; size: number },
-  { companyId: string },
+  ListQuizzesArgs,
   { rejectValue: string }
->("quiz/list", async ({ companyId }, thunkAPI) => {
+>("quiz/list", async ({ companyId, page, size, active }, thunkAPI) => {
   try {
-    return await quizApi.listQuizzes(companyId);
+    return await quizApi.listQuizzes(companyId, {
+      page,
+      size,
+      active,
+    });
   } catch {
     return thunkAPI.rejectWithValue("Failed to load quizzes");
   }

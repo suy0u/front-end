@@ -157,16 +157,19 @@ export function CompanyMembersList({ companyId, isOwner }: Props) {
           <DataCard
             key={m.user_id}
             title={
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Typography sx={{ fontWeight: 600 }}>{m.username}</Typography>
-                <Chip
-                  size="sm"
-                  label={m.role}
-                  variant={getRoleVariant(m.role)}
-                />
+              <Stack spacing={0.5}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography sx={{ fontWeight: 600 }}>{m.username}</Typography>
+                  <Chip
+                    size="sm"
+                    label={m.role}
+                    variant={getRoleVariant(m.role)}
+                  />
+                </Stack>
+
+                <Typography variant="body2">{m.email}</Typography>
               </Stack>
             }
-            subtitle={m.email}
             right={
               isOwner &&
               m.role !== ROLE.OWNER && (

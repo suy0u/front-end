@@ -24,7 +24,9 @@ import {
   getCompanyQuizSubmissionsThunk,
 } from "../thunks/quizThunks";
 
-export interface QuizState {
+import type { PaginationState } from "../../types/common";
+
+export interface QuizState extends PaginationState {
   quizzes: Quiz[];
   currentQuiz: QuizDetails | null;
 
@@ -43,6 +45,10 @@ const initialState: QuizState = {
   myStats: [],
   mySubmissions: [],
   companySubmissions: [],
+
+  page: 1,
+  size: 20,
+  total: 0,
 
   loading: false,
   error: null,
@@ -84,6 +90,9 @@ const quizSlice = createSlice({
     builder
       .addCase(listQuizzesThunk.fulfilled, (state, action) => {
         state.quizzes = action.payload.items;
+        state.total = action.payload.total;
+        state.page = action.payload.page;
+        state.size = action.payload.size;
       })
 
       .addCase(getQuizThunk.fulfilled, (state, action) => {
