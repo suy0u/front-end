@@ -7,6 +7,7 @@ import HomePage from "../pages/HomePage";
 import PrivateRoute from "../components/Authorization/PrivateRoute";
 import LoginPage from "../pages/Authorization/LoginPage";
 import RegisterPage from "../pages/Authorization/RegisterPage";
+import QuizPage from "../pages/Quizzes/QuizPage";
 import AuthCallback from "../pages/Authorization/AuthCallback";
 import NotFoundPage from "../pages/NotFoundPage";
 
@@ -16,7 +17,6 @@ const AppRouter = () => (
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
-
     <Route
       path="/users"
       element={
@@ -25,7 +25,6 @@ const AppRouter = () => (
         </PrivateRoute>
       }
     />
-
     <Route
       path="/users/:id"
       element={
@@ -34,7 +33,6 @@ const AppRouter = () => (
         </PrivateRoute>
       }
     />
-
     <Route
       path="/companies"
       element={
@@ -43,7 +41,6 @@ const AppRouter = () => (
         </PrivateRoute>
       }
     />
-
     <Route
       path="/companies/:id"
       element={
@@ -51,8 +48,15 @@ const AppRouter = () => (
           <CompanyProfilePage />
         </PrivateRoute>
       }
+    />{" "}
+    <Route
+      path="/companies/:companyId/quizzes/:quizId"
+      element={
+        <PrivateRoute>
+          <QuizPage />
+        </PrivateRoute>
+      }
     />
-
     <Route path="*" element={<NotFoundPage />} />
   </Routes>
 );
