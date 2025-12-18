@@ -28,6 +28,15 @@ export const theme = createTheme({
       signUpText: "#14302A",
       signUpHover: "#FFDD40",
       signUpActiveShadow: "#2D6F63",
+      optionButton: {
+        text: "#6b4e4a",
+        border: "#e6dcd8",
+        borderActive: "#c7a9a2",
+        bg: "#faf6f4",
+        bgHover: "#f1e7e3",
+        bgActive: "#f3dcd7",
+        shadow: "rgba(199,169,162,0.35)",
+      },
     },
   },
 
@@ -71,6 +80,16 @@ export const theme = createTheme({
             borderRadius: 40,
             padding: theme.spacing(4),
             backgroundColor: theme.palette.custom.yellow,
+            boxShadow: "0px 10px 30px rgba(0,0,0,0.1)",
+          }),
+        },
+        {
+          props: { variant: "manageCard" },
+          style: ({ theme }) => ({
+            borderRadius: 40,
+            padding: theme.spacing(4),
+            marginTop: theme.spacing(4),
+            backgroundColor: theme.palette.custom.pink,
             boxShadow: "0px 10px 30px rgba(0,0,0,0.1)",
           }),
         },
@@ -210,6 +229,33 @@ export const theme = createTheme({
               boxShadow: `0 2px 0 ${theme.palette.custom.signUpActiveShadow}`,
             },
           }),
+        },
+        {
+          props: { variant: "option" },
+          style: ({ theme }) => {
+            const c = theme.palette.custom.optionButton;
+
+            return {
+              border: `2px solid ${c.border}`,
+              backgroundColor: c.bg,
+              color: c.text,
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                backgroundColor: c.bgHover,
+              },
+
+              "&.Mui-selected": {
+                backgroundColor: c.bgActive,
+                borderColor: c.borderActive,
+                boxShadow: `0 6px 16px ${c.shadow}`,
+              },
+
+              "&:active": {
+                transform: "scale(0.97)",
+              },
+            };
+          },
         },
       ],
     },
