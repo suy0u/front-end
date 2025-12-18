@@ -70,7 +70,13 @@
     "promote": "Promote to admin",
     "promote_confirm": "Are you sure you want to promote this member to admin?",
     "demote": "Demote to member",
-    "demote_confirm": "Are you sure you want to demote this member to common member?"
+    "demote_confirm": "Are you sure you want to demote this member to common member?",
+    "role": {
+      "all": "All",
+      "owner": "Owner",
+      "admins": "Admins",
+      "members": "Members"
+    }
   },
 
   "search": {

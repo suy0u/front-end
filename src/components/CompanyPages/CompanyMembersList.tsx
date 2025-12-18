@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Button, Stack, Typography, Chip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -48,6 +48,7 @@ export function CompanyMembersList({ companyId, isOwner }: Props) {
 
   const [page, setPage] = useState(1);
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
+  const [roleFilter, setRoleFilter] = useState<CompanyRole | "ALL">("ALL");
 
   const fetchMembers = useCallback(() => {
     dispatch(fetchCompanyMembers({ companyId, page, size: PAGE_SIZE }));
@@ -112,15 +113,47 @@ export function CompanyMembersList({ companyId, isOwner }: Props) {
     fetchMembers();
   };
 
+  const filteredMembers = useMemo(() => {
+    if (roleFilter === "ALL") return companyMembers;
+    return companyMembers.filter((m) => m.role === roleFilter);
+  }, [companyMembers, roleFilter]);
+
   return (
     <>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{
+          mt: 2,
+          p: 1,
+          backgroundColor: "rgba(255,255,255,0.7)",
+          borderRadius: "16px",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+          width: "fit-content",
+        }}
+      >
+        <Chip
+          size="md"
+          label={t("membership.role.all")}
+          variant={roleFilter === "ALL" ? "roleMember" : "inActive"}
+          clickable
+          onClick={() => setRoleFilter("ALL")}
+        />
+        <Chip
+          size="md"
+          label={t("membership.role.admins")}
+          variant={roleFilter === ROLE.ADMIN ? "roleAdmin" : "inActive"}
+          clickable
+          onClick={() => setRoleFilter(ROLE.ADMIN)}
+        />
+      </Stack>
+
       <ListSection
-        title={t("membership.members")}
         loading={loading}
-        empty={companyMembers.length === 0}
+        empty={filteredMembers.length === 0}
         emptyText={t("errors.not_found")}
       >
-        {companyMembers.map((m) => (
+        {filteredMembers.map((m) => (
           <DataCard
             key={m.user_id}
             title={

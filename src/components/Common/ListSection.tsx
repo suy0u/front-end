@@ -1,7 +1,7 @@
 import { Box, Typography, Stack, CircularProgress } from "@mui/material";
 
 interface Props {
-  title: string;
+  title?: string;
   loading: boolean;
   empty: boolean;
   emptyText: string;
