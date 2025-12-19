@@ -76,7 +76,7 @@ export const submitQuiz = (
   quizId: string,
   companyId: string,
   payload: SubmitQuizPayload
-): Promise<void> =>
+): Promise<QuizSubmission> =>
   withCatch(
     api.post(`/api/quizzes/${quizId}/submit`, payload, {
       params: { company_id: companyId },

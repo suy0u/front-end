@@ -72,12 +72,12 @@ export const deleteQuizThunk = createAsyncThunk<
 });
 
 export const submitQuizThunk = createAsyncThunk<
-  void,
+  QuizSubmission,
   { quizId: string; companyId: string; payload: SubmitQuizPayload },
   { rejectValue: string }
 >("quiz/submit", async ({ quizId, companyId, payload }, thunkAPI) => {
   try {
-    await quizApi.submitQuiz(quizId, companyId, payload);
+    return await quizApi.submitQuiz(quizId, companyId, payload);
   } catch {
     return thunkAPI.rejectWithValue("Failed to submit quiz");
   }

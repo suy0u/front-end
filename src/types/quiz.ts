@@ -61,12 +61,15 @@ export interface QuizAnswerPayload {
 export interface SubmitQuizPayload {
   answers: QuizAnswerPayload[];
 }
-
 export interface QuizSubmission {
   id: string;
-  user_id: string;
   quiz_id: string;
-  score: number;
+  user_id: string;
+
+  correct_answers: number;
+  total_answers: number;
+  score_percent: number;
+
   created_at: string;
 }
 
