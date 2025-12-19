@@ -6,6 +6,7 @@ import {
   getQuizThunk,
   submitQuizThunk,
 } from "../../../store/thunks/quizThunks";
+import type { QuizSubmission } from "../../../types/quiz";
 
 export function useQuizPage() {
   const { quizId, companyId } = useParams<{
@@ -19,6 +20,7 @@ export function useQuizPage() {
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
 
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+  const [submitResult, setSubmitResult] = useState<QuizSubmission | null>(null);
 
   useEffect(() => {
     if (!quizId || !companyId) return;
@@ -54,7 +56,7 @@ export function useQuizPage() {
     if (!currentQuiz || !companyId) return;
 
     try {
-      await dispatch(
+      const result = await dispatch(
         submitQuizThunk({
           quizId: currentQuiz.id,
           companyId: companyId,
@@ -69,6 +71,7 @@ export function useQuizPage() {
         })
       ).unwrap();
 
+      setSubmitResult(result);
       setIsSubmitSuccess(true);
     } catch (e) {
       console.error("Submit error:", e);
@@ -96,5 +99,6 @@ export function useQuizPage() {
     isSubmitSuccess,
     setIsSubmitSuccess,
     resetQuiz,
+    submitResult,
   };
 }

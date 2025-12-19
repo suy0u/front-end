@@ -24,6 +24,7 @@ export default function QuizPage() {
     isSubmitSuccess,
     setIsSubmitSuccess,
     resetQuiz,
+    submitResult,
   } = useQuizPage();
 
   if (loading) {
@@ -89,6 +90,22 @@ export default function QuizPage() {
           </>
         }
       >
+        {submitResult && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              {t("quiz.correct_answers", {
+                correct: submitResult.correct_answers,
+                total: submitResult.total_answers,
+              })}
+            </Typography>
+
+            <Typography sx={{ fontSize: 18 }}>
+              {t("quiz.score_percent", {
+                percent: submitResult.score_percent,
+              })}
+            </Typography>
+          </Box>
+        )}
         <Box sx={{ fontSize: 18, mt: 2 }}>{t("common.what_next")}</Box>
       </AppModal>
     </Box>

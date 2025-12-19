@@ -91,6 +91,8 @@
     "create": "Create quiz",
     "title": "Title",
     "description": "Description",
+    "correct_answers": "Answers: {{correct}} of {{total}}",
+    "score_percent": "Score: {{percent}}%",
     "question": {
       "name": "Question",
       "add": "Add question",

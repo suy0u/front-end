@@ -92,6 +92,8 @@
     "create": "Додати вікторину",
     "title": "Заголовок",
     "description": "Опис",
+    "answers": "Відповіді: {{correct}} з {{total}}",
+    "score_percent": "Відсоток балів: {{percent}}%",
     "question": {
       "name": "Питання",
       "add": "Додати питання",
