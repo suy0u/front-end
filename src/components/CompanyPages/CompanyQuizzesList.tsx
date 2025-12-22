@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { DataCard } from "../Cards/DataCard";
 import { ListSection } from "../Common/ListSection";
 import { ListPagination } from "../Common/ListPagination";
 import { ConfirmModal } from "../Modals/ConfirmModal";
+import { ExportQuizButton } from "../Common/ExportQuizButton";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
@@ -90,16 +91,22 @@ export function CompanyQuizzesList({ companyId, canManage }: Props) {
             to={`/companies/${companyId}/quizzes/${quiz.id}`}
             right={
               canManage && (
-                <Button
-                  size="sm"
-                  variant="orange"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setConfirmDelete({ quiz });
-                  }}
-                >
-                  {t("actions.delete")}
-                </Button>
+                <Stack spacing={2} direction={"row"}>
+                  <ExportQuizButton
+                    quizId={quiz.id}
+                    companyId={quiz.company_id}
+                  />
+                  <Button
+                    size="sm"
+                    variant="orange"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setConfirmDelete({ quiz });
+                    }}
+                  >
+                    {t("actions.delete")}
+                  </Button>
+                </Stack>
               )
             }
           />

@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { DataCard } from "../../components/Cards/DataCard";
+import { ExportQuizButton } from "../Common/ExportQuizButton";
 import { getRoleVariant } from "../../utils/companyChips";
 import type { MyCompany } from "../../types/company";
 import { type MembershipState } from "../../store/slices/membershipSlice";
@@ -47,18 +48,25 @@ export default function UserCompaniesSection({
               </Stack>
             }
             right={
-              company.role !== "OWNER" && (
-                <Button
-                  size="sm"
-                  variant="orange"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onLeaveClick(company);
-                  }}
-                >
-                  {t("actions.leave")}
-                </Button>
-              )
+              <Stack direction="row" spacing={2}>
+                {(company.role === "OWNER" || company.role === "ADMIN") && (
+                  <ExportQuizButton companyId={company.company_id} />
+                )}
+
+                {company.role !== "OWNER" && (
+                  <Button
+                    size="sm"
+                    variant="orange"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onLeaveClick(company);
+                    }}
+                  >
+                    {t("actions.leave")}
+                  </Button>
+                )}
+              </Stack>
             }
           ></DataCard>
         ))}
