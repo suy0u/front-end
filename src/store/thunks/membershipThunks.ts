@@ -176,7 +176,7 @@ export const cancelMyRequestThunk = createAsyncThunk<
 >("membership/cancelMyRequest", async (requestId, thunkAPI) => {
   try {
     await cancelMyRequest(requestId);
-    return requestId; // ⬅️ вручную возвращаем id
+    return requestId;
   } catch {
     return thunkAPI.rejectWithValue("Failed to cancel request");
   }

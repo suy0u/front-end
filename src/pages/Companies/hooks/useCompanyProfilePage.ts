@@ -50,9 +50,6 @@ export function useCompanyProfilePage(id?: string) {
   );
   const companyId = useMemo(() => company?.id ?? null, [company]);
 
-  // const { data: userQuizScores, loading: analyticsLoading } =
-  //   useCompanyAnalyticsPage(companyId, selectedUserId, dateRange);
-
   const {
     userQuizScores,
     companyLastAttempts,
