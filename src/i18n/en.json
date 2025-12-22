@@ -89,6 +89,8 @@
   "quiz": {
     "list": "Quizzes",
     "create": "Create quiz",
+    "delete": "Delete quiz",
+    "delete_confirm": "Are you sure you want to delete the quiz? This action cannot be undone.",
     "title": "Title",
     "description": "Description",
     "correct_answers": "Answers: {{correct}} of {{total}}",

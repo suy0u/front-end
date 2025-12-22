@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -24,21 +24,41 @@ interface Props {
   canManage?: boolean;
 }
 
+const QUIZZES_PER_PAGE = 10;
+
 export function CompanyQuizzesList({ companyId, canManage }: Props) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const { quizzes, loading } = useAppSelector((s) => s.quiz);
+  const { quizzes, loading, total, page } = useAppSelector((s) => s.quiz);
 
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10); // если понадобится
   const [confirmDelete, setConfirmDelete] = useState<ConfirmDeleteState | null>(
     null
   );
 
+  const loadQuizzes = useCallback(() => {
+    dispatch(
+      listQuizzesThunk({
+        companyId,
+        page,
+        size: QUIZZES_PER_PAGE,
+      })
+    );
+  }, [dispatch, companyId, page]);
+
   useEffect(() => {
-    dispatch(listQuizzesThunk({ companyId }));
-  }, [dispatch, companyId]);
+    loadQuizzes();
+  }, [loadQuizzes]);
+
+  const handlePageChange = (newPage: number) => {
+    dispatch(
+      listQuizzesThunk({
+        companyId,
+        page: newPage,
+        size: QUIZZES_PER_PAGE,
+      })
+    );
+  };
 
   const handleDelete = async () => {
     if (!confirmDelete) return;
@@ -51,14 +71,15 @@ export function CompanyQuizzesList({ companyId, canManage }: Props) {
     ).unwrap();
 
     setConfirmDelete(null);
-    dispatch(listQuizzesThunk({ companyId }));
+
+    loadQuizzes();
   };
 
   return (
     <>
       <ListSection
         loading={loading}
-        empty={quizzes.length === 0}
+        empty={!loading && quizzes.length === 0}
         emptyText={t("errors.not_found")}
       >
         {quizzes.map((quiz) => (
@@ -85,12 +106,14 @@ export function CompanyQuizzesList({ companyId, canManage }: Props) {
         ))}
       </ListSection>
 
-      <ListPagination
-        page={page}
-        total={quizzes.length}
-        limit={limit}
-        onChange={setPage}
-      />
+      {total > QUIZZES_PER_PAGE && (
+        <ListPagination
+          page={page}
+          total={total}
+          limit={QUIZZES_PER_PAGE}
+          onChange={handlePageChange}
+        />
+      )}
 
       {confirmDelete && (
         <ConfirmModal

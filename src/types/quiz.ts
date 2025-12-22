@@ -1,3 +1,4 @@
+import type { PaginationParams } from "./common";
 export interface Quiz {
   id: string;
   company_id: string;
@@ -81,4 +82,9 @@ export interface QuizStat {
 
 export interface QuizDetails extends Quiz {
   questions: QuizQuestion[];
+}
+
+export interface ListQuizzesArgs extends PaginationParams {
+  companyId: string;
+  active?: boolean;
 }

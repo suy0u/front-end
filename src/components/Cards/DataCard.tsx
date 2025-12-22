@@ -37,7 +37,7 @@ export function DataCard({
         ...sx,
       }}
     >
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, textAlign: "left" }}>
         {title && (
           <Typography component="div" sx={{ fontWeight: 700 }}>
             {title}
