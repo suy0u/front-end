@@ -14,3 +14,13 @@ export interface PaginationState {
   size: number;
   total: number;
 }
+
+export type ListModalType =
+  | "company_members"
+  | "company_invitations"
+  | "company_requests"
+  | "user_companies"
+  | "user_invitations"
+  | "user_requests"
+  | "company_quizzes"
+  | null;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
@@ -11,9 +11,17 @@ import {
   fetchMyRequests,
   fetchMyInvitations,
 } from "../../../store/thunks/membershipThunks";
+import { listQuizzesThunk } from "../../../store/thunks/quizThunks";
 
-import type { LeaveCompanyState } from "../../../types/membership";
+import type { LeaveCompanyState, CompanyRole } from "../../../types/membership";
 import type { MyCompany } from "../../../types/company";
+import type { ListModalType } from "../../../types/common";
+
+const ROLE: Record<CompanyRole, CompanyRole> = {
+  OWNER: "OWNER",
+  ADMIN: "ADMIN",
+  MEMBER: "MEMBER",
+};
 
 export function useCompanyProfilePage(id?: string) {
   const dispatch = useAppDispatch();
@@ -25,7 +33,9 @@ export function useCompanyProfilePage(id?: string) {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isCreateQuizOpen, setIsCreateQuizOpen] = useState(false);
   const [companyToLeave, setCompanyToLeave] = useState<LeaveCompanyState>(null);
+  const [listModal, setListModal] = useState<ListModalType>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -34,6 +44,7 @@ export function useCompanyProfilePage(id?: string) {
     dispatch(fetchMyCompanies());
     dispatch(fetchMyRequests({ page: 1, size: 10 }));
     dispatch(fetchMyInvitations({ page: 1, size: 10 }));
+    dispatch(listQuizzesThunk({ companyId: id }));
 
     return () => {
       dispatch(clearCompany());
@@ -45,8 +56,14 @@ export function useCompanyProfilePage(id?: string) {
     [myCompanies, id]
   );
 
+  const role = myMembership?.role;
   const isOwner = authUser?.id === company?.owner_id;
   const canLeave = Boolean(myMembership && !isOwner);
+
+  const isAdmin = role === ROLE.ADMIN;
+  const canViewQuizzes = Boolean(myMembership);
+
+  const canManageQuizzes = isOwner || isAdmin;
 
   const confirmLeaveCompany = async () => {
     if (!companyToLeave) return;
@@ -57,24 +74,39 @@ export function useCompanyProfilePage(id?: string) {
     navigate("/companies");
   };
 
+  const onQuizCreated = useCallback(() => {
+    if (!id) return;
+    dispatch(listQuizzesThunk({ companyId: id }));
+    setIsCreateQuizOpen(false);
+  }, [dispatch, id]);
+
   return {
     company,
     loading,
     error,
 
+    isAdmin,
     isOwner,
     canLeave,
     myMembership,
 
+    canViewQuizzes,
+    canManageQuizzes,
+
     isEditModalOpen,
     isDeleteModalOpen,
+    isCreateQuizOpen,
     companyToLeave,
+    listModal,
 
     actions: {
       setIsEditModalOpen,
       setIsDeleteModalOpen,
+      setIsCreateQuizOpen,
       setCompanyToLeave,
       confirmLeaveCompany,
+      onQuizCreated,
+      setListModal,
     },
   };
 }

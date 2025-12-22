@@ -21,7 +21,7 @@ export default function AppModal({
       open={open}
       onClose={onClose}
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       slotProps={{
         paper: {
           sx: {

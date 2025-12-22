@@ -62,6 +62,7 @@ const companiesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
+
       .addCase(fetchCompanyById.fulfilled, (state, action) => {
         state.loading = false;
         state.company = action.payload;

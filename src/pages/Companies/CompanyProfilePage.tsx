@@ -1,17 +1,23 @@
-import { Box, Typography, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Stack,
+  Button,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { PageCard } from "../../components/Cards/PageCard";
+import { ManageCard } from "../../components/Cards/ManageCard";
 import CompanyHeader from "../../components/CompanyPages/CompanyHeader";
 import CompanyDescription from "../../components/CompanyPages/CompanyDescription";
-import { CompanyMembersList } from "../../components/CompanyPages/CompanyMembersList";
-import { CompanyInvitationsList } from "../../components/CompanyPages/CompanyInvitationsList";
-import { CompanyRequestsList } from "../../components/CompanyPages/CompanyRequestsList";
 
 import { EditCompanyModal } from "../../components/Modals/EditCompanyModal";
 import { DeleteCompanyModal } from "../../components/Modals/DeleteCompanyModal";
 import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
+import CreateQuizModal from "../../components/Modals/Quiz/CreateQuizModal";
+import ListsModal from "../../components/Modals/ListsModal";
 
 import { useCompanyProfilePage } from "./hooks/useCompanyProfilePage";
 
@@ -28,9 +34,14 @@ export default function CompanyProfilePage() {
     canLeave,
     myMembership,
 
+    canViewQuizzes,
+    canManageQuizzes,
+
     isEditModalOpen,
     isDeleteModalOpen,
+    isCreateQuizOpen,
     companyToLeave,
+    listModal,
 
     actions,
   } = useCompanyProfilePage(id);
@@ -65,16 +76,69 @@ export default function CompanyProfilePage() {
 
         <CompanyDescription description={company.description} />
       </PageCard>
+      {canViewQuizzes && (
+        <ManageCard>
+          <Stack direction="row" spacing={5} alignItems="flex-start">
+            <Stack spacing={1} alignItems="flex-start">
+              <Typography variant="h5" sx={{ fontWeight: 900 }}>
+                Quizzes
+              </Typography>
 
-      {isOwner && (
-        <>
-          <CompanyMembersList companyId={company.id} isOwner={isOwner} />
-          <CompanyInvitationsList companyId={company.id} />
-          <CompanyRequestsList companyId={company.id} />
-        </>
+              {canManageQuizzes && (
+                <Button
+                  size="sm"
+                  variant="mint"
+                  onClick={() => actions.setIsCreateQuizOpen(true)}
+                >
+                  {t("actions.create")}
+                </Button>
+              )}
+
+              <Button
+                size="sm"
+                variant="mint"
+                onClick={() => actions.setListModal("company_quizzes")}
+              >
+                {t("quiz.list")}
+              </Button>
+            </Stack>
+
+            {isOwner && (
+              <Stack spacing={1} alignItems="flex-start">
+                <Typography variant="h5" sx={{ fontWeight: 900 }}>
+                  Lists
+                </Typography>
+
+                <Button
+                  size="sm"
+                  variant="blue"
+                  onClick={() => actions.setListModal("company_members")}
+                >
+                  Members
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="blue"
+                  onClick={() => actions.setListModal("company_invitations")}
+                >
+                  Invitations
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="blue"
+                  onClick={() => actions.setListModal("company_requests")}
+                >
+                  Requests
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+        </ManageCard>
       )}
 
-      {isOwner && (
+      {canManageQuizzes && (
         <>
           <EditCompanyModal
             open={isEditModalOpen}
@@ -86,8 +150,21 @@ export default function CompanyProfilePage() {
             onClose={() => actions.setIsDeleteModalOpen(false)}
             companyId={company.id}
           />
+          <CreateQuizModal
+            open={isCreateQuizOpen}
+            companyId={company.id}
+            onClose={() => actions.setIsCreateQuizOpen(false)}
+            onSuccess={actions.onQuizCreated}
+          />
         </>
       )}
+      <ListsModal
+        open={!!listModal}
+        type={listModal}
+        companyId={company.id}
+        isOwner={canManageQuizzes}
+        onClose={() => actions.setListModal(null)}
+      />
 
       {canLeave && (
         <LeaveCompanyModal

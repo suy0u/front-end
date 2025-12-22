@@ -91,7 +91,6 @@ export function CompanyRequestsList({ companyId }: Props) {
   return (
     <>
       <ListSection
-        title={t("request.join_requests")}
         loading={loading}
         empty={companyRequests.length === 0}
         emptyText={t("errors.not_found")}

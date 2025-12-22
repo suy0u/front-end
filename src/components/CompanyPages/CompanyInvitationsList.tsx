@@ -75,7 +75,6 @@ export function CompanyInvitationsList({ companyId }: Props) {
   return (
     <>
       <ListSection
-        title={t("invitation.proposed_invitations")}
         loading={loading}
         empty={companyInvitations.length === 0}
         emptyText={t("errors.not_found")}

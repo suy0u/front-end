@@ -26,6 +26,15 @@ declare module "@mui/material/styles" {
       signUpText: string;
       signUpHover: string;
       signUpActiveShadow: string;
+      optionButton: {
+        text: string;
+        border: string;
+        borderActive: string;
+        bg: string;
+        bgHover: string;
+        bgActive: string;
+        shadow: string;
+      };
     };
   }
 
@@ -50,6 +59,7 @@ declare module "@mui/material/Button" {
     white: true;
     dark_blue: true;
     grey: true;
+    option: true;
   }
 
   interface ButtonPropsSizeOverrides {
@@ -64,6 +74,7 @@ declare module "@mui/material/Paper" {
     companyCard: true;
     userCard: true;
     pageCard: true;
+    manageCard: true;
   }
 }
 
