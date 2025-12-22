@@ -25,10 +25,6 @@ export default function UserCompaniesSection({
 
   return (
     <Box sx={{ mt: 6 }}>
-      <Typography variant="h5" sx={{ fontWeight: 900, mb: 3 }}>
-        {t("common.my")} {t("app.companies")}
-      </Typography>
-
       {membership.loading && <CircularProgress />}
 
       {!membership.loading && !membership.myCompanies.length && (

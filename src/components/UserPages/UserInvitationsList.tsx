@@ -59,7 +59,6 @@ export function UserInvitationsList() {
   return (
     <>
       <ListSection
-        title={`${t("common.my")} ${t("invitation.invitations")}`}
         loading={loading}
         empty={myInvitations.length === 0}
         emptyText={t("errors.not_found")}
