@@ -16,6 +16,9 @@ import { listQuizzesThunk } from "../../../store/thunks/quizThunks";
 import type { LeaveCompanyState, CompanyRole } from "../../../types/membership";
 import type { MyCompany } from "../../../types/company";
 import type { ListModalType } from "../../../types/common";
+import type { User } from "../../../types/user";
+import type { DateRangeParams } from "../../../types/analytics";
+import { useCompanyAnalyticsPage } from "./useCompanyAnalyticsPage";
 
 const ROLE: Record<CompanyRole, CompanyRole> = {
   OWNER: "OWNER",
@@ -36,6 +39,29 @@ export function useCompanyProfilePage(id?: string) {
   const [isCreateQuizOpen, setIsCreateQuizOpen] = useState(false);
   const [companyToLeave, setCompanyToLeave] = useState<LeaveCompanyState>(null);
   const [listModal, setListModal] = useState<ListModalType>(null);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const [dateRange, setDateRange] = useState<DateRangeParams>({
+    preset: "week",
+  });
+
+  const selectedUserId = useMemo(
+    () => selectedUsers[0]?.id ?? null,
+    [selectedUsers]
+  );
+  const companyId = useMemo(() => company?.id ?? null, [company]);
+
+  // const { data: userQuizScores, loading: analyticsLoading } =
+  //   useCompanyAnalyticsPage(companyId, selectedUserId, dateRange);
+
+  const {
+    userQuizScores,
+    companyLastAttempts,
+    loading: analyticsLoading,
+  } = useCompanyAnalyticsPage(
+    companyId ?? null,
+    selectedUserId ?? null,
+    dateRange
+  );
 
   useEffect(() => {
     if (!id) return;
@@ -93,6 +119,13 @@ export function useCompanyProfilePage(id?: string) {
     canViewQuizzes,
     canManageQuizzes,
 
+    selectedUsers,
+    userQuizScores,
+    analyticsLoading,
+
+    dateRange,
+    companyLastAttempts,
+
     isEditModalOpen,
     isDeleteModalOpen,
     isCreateQuizOpen,
@@ -100,6 +133,8 @@ export function useCompanyProfilePage(id?: string) {
     listModal,
 
     actions: {
+      setSelectedUsers,
+      setDateRange,
       setIsEditModalOpen,
       setIsDeleteModalOpen,
       setIsCreateQuizOpen,
