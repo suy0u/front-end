@@ -6,6 +6,7 @@ import {
   deleteUser,
   uploadUserAvatar,
   searchUsers,
+  searchMembers,
 } from "../../api/users";
 import type { UpdateUserPayload, User, UsersResponse } from "../../types/user";
 
@@ -70,13 +71,26 @@ export const uploadAvatarThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue("Avatar upload failed");
   }
 });
+
 export const searchUsersThunk = createAsyncThunk<
   User[],
   { query: string; companyId: string },
   { rejectValue: string }
->("users/search", async ({ query, companyId }, thunkAPI) => {
+>("users/searchUsers", async ({ query, companyId }, thunkAPI) => {
   try {
     return await searchUsers(query, companyId);
+  } catch {
+    return thunkAPI.rejectWithValue("Search failed");
+  }
+});
+
+export const searchMembersThunk = createAsyncThunk<
+  User[],
+  { query: string; companyId: string },
+  { rejectValue: string }
+>("users/searchMembers", async ({ query, companyId }, thunkAPI) => {
+  try {
+    return await searchMembers(query, companyId);
   } catch {
     return thunkAPI.rejectWithValue("Search failed");
   }

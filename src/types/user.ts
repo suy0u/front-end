@@ -36,3 +36,5 @@ export interface EditUserData {
   about: string;
   avatar_url: string;
 }
+
+export type UserSearchScope = "users" | "members";
