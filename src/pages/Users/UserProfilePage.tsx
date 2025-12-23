@@ -1,18 +1,25 @@
-import { Box, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import NotFoundPage from "../NotFoundPage";
 
 import UserProfileHeader from "../../components/UserPages/UserProfileHeader";
-import UserCompaniesSection from "../../components/UserPages/UserCompaniesSection";
-import { UserInvitationsList } from "../../components/UserPages/UserInvitationsList";
-import { UserRequestsList } from "../../components/UserPages/UserRequestsList";
+import UserAnalyticsSection from "../../components/UserPages/UserAnalyticsSection";
+import { ManageCard } from "../../components/Cards/ManageCard";
 
 import DeleteAccountModal from "../../components/Modals/Users/DeleteAccountModal";
 import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
+import ListsModal from "../../components/Modals/ListsModal";
 
 import { useUserProfilePage } from "./hooks/useUserProfilePage";
+import { useUserProfileAnalytics } from "./hooks/useUserProfileAnalytics";
 
 export default function UserProfilePage() {
   const { t } = useTranslation();
@@ -29,9 +36,12 @@ export default function UserProfilePage() {
     editData,
     isDeleteModalOpen,
     companyToLeave,
+    listModal,
 
     actions,
   } = useUserProfilePage(id);
+
+  const { myLastCompletions } = useUserProfileAnalytics(isSelf);
 
   if (loading) {
     return (
@@ -59,18 +69,55 @@ export default function UserProfilePage() {
         onAvatarUpload={actions.uploadAvatar}
         onChange={actions.setEditData}
       />
-
       {isSelf && (
-        <Box sx={{ mt: 6 }}>
-          <UserCompaniesSection
-            membership={membership}
-            onLeaveClick={actions.setCompanyToLeave}
-          />
+        <>
+          <ManageCard>
+            <Stack direction="row" spacing={5} alignItems="flex-start">
+              <Stack spacing={1} alignItems="flex-start">
+                <Typography variant="h5" sx={{ fontWeight: 900 }}>
+                  Management
+                </Typography>
 
-          <UserInvitationsList />
-          <UserRequestsList />
-        </Box>
+                <Button
+                  size="sm"
+                  variant="blue"
+                  onClick={() => actions.setListModal("user_companies")}
+                >
+                  My Companies
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="blue"
+                  onClick={() => actions.setListModal("user_invitations")}
+                >
+                  Invitations
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="blue"
+                  onClick={() => actions.setListModal("user_requests")}
+                >
+                  Requests
+                </Button>
+              </Stack>
+            </Stack>
+          </ManageCard>
+
+          <Box sx={{ mt: 6 }}>
+            <UserAnalyticsSection myLastAttempts={myLastCompletions} />
+          </Box>
+        </>
       )}
+
+      <ListsModal
+        open={!!listModal}
+        type={listModal}
+        membership={membership}
+        onLeaveClick={actions.setCompanyToLeave}
+        onClose={() => actions.setListModal(null)}
+      />
 
       <DeleteAccountModal
         open={isDeleteModalOpen}

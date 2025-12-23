@@ -12,6 +12,7 @@ import { PageCard } from "../../components/Cards/PageCard";
 import { ManageCard } from "../../components/Cards/ManageCard";
 import CompanyHeader from "../../components/CompanyPages/CompanyHeader";
 import CompanyDescription from "../../components/CompanyPages/CompanyDescription";
+import CompanyAnalyticsCard from "../../components/CompanyPages/CompanyAnalyticsSection";
 
 import { EditCompanyModal } from "../../components/Modals/EditCompanyModal";
 import { DeleteCompanyModal } from "../../components/Modals/DeleteCompanyModal";
@@ -36,6 +37,13 @@ export default function CompanyProfilePage() {
 
     canViewQuizzes,
     canManageQuizzes,
+
+    selectedUsers,
+    userQuizScores,
+    analyticsLoading,
+
+    dateRange,
+    companyLastAttempts,
 
     isEditModalOpen,
     isDeleteModalOpen,
@@ -138,6 +146,18 @@ export default function CompanyProfilePage() {
         </ManageCard>
       )}
 
+      {canManageQuizzes && (
+        <CompanyAnalyticsCard
+          companyId={company.id}
+          selectedUsers={selectedUsers}
+          userQuizScores={userQuizScores}
+          loading={analyticsLoading}
+          onUsersChange={actions.setSelectedUsers}
+          dateRange={dateRange}
+          onDateRangeChange={actions.setDateRange}
+          companyLastAttempts={companyLastAttempts}
+        />
+      )}
       {canManageQuizzes && (
         <>
           <EditCompanyModal

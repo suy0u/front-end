@@ -51,7 +51,6 @@ export function UserRequestsList() {
   return (
     <>
       <ListSection
-        title={`${t("common.my")} ${t("request.requests")}`}
         loading={loading}
         empty={myRequests.length === 0}
         emptyText={t("errors.not_found")}

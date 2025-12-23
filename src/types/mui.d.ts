@@ -75,6 +75,7 @@ declare module "@mui/material/Paper" {
     userCard: true;
     pageCard: true;
     manageCard: true;
+    analyticsCard: true;
   }
 }
 

@@ -15,6 +15,10 @@ export default function Pagination({
 }: PaginationProps) {
   const pages = Math.ceil(total / limit);
 
+  if (pages <= 1) {
+    return null;
+  }
+
   return (
     <Box style={{ display: "flex", gap: 8 }}>
       {Array.from({ length: pages }).map((_, i) => (

@@ -93,6 +93,16 @@ export const theme = createTheme({
             boxShadow: "0px 10px 30px rgba(0,0,0,0.1)",
           }),
         },
+        {
+          props: { variant: "analyticsCard" },
+          style: ({ theme }) => ({
+            borderRadius: 40,
+            padding: theme.spacing(4),
+            marginTop: theme.spacing(4),
+            backgroundColor: theme.palette.custom.mint,
+            boxShadow: "0px 10px 30px rgba(0,0,0,0.1)",
+          }),
+        },
       ],
     },
     MuiButton: {

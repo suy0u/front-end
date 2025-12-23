@@ -48,3 +48,19 @@ export const searchUsers = (
     }),
     "searchUsers"
   );
+
+export const searchMembers = (
+  query: string,
+  companyId: string,
+  limit = 10
+): Promise<User[]> =>
+  withCatch<User[]>(
+    api.get("/api/users/search/members", {
+      params: {
+        q: query,
+        company_id: companyId,
+        limit,
+      },
+    }),
+    "searchMembers"
+  );

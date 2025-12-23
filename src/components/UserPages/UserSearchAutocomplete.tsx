@@ -3,18 +3,27 @@ import { Autocomplete, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { searchUsersThunk } from "../../store/thunks/userThunks";
+import {
+  searchUsersThunk,
+  searchMembersThunk,
+} from "../../store/thunks/userThunks";
 import { clearUserSearch } from "../../store/slices/userSlice";
-import type { User } from "../../types/user";
+import type { User, UserSearchScope } from "../../types/user";
 import { AppTextField } from "../TextFields/AppTextField";
 
 interface Props {
   companyId: string;
   value: User[];
   onChange: (users: User[]) => void;
+  scope?: UserSearchScope;
 }
 
-export function UserSearchAutocomplete({ companyId, value, onChange }: Props) {
+export function UserSearchAutocomplete({
+  companyId,
+  value,
+  onChange,
+  scope = "users",
+}: Props) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
@@ -24,7 +33,6 @@ export function UserSearchAutocomplete({ companyId, value, onChange }: Props) {
   const [inputValue, setInputValue] = useState("");
   const [debouncedValue, setDebouncedValue] = useState("");
 
-  // debounce
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedValue(inputValue);
@@ -33,21 +41,28 @@ export function UserSearchAutocomplete({ companyId, value, onChange }: Props) {
     return () => clearTimeout(timeout);
   }, [inputValue]);
 
-  // search
   useEffect(() => {
     if (debouncedValue.length >= 2) {
-      dispatch(
-        searchUsersThunk({
-          query: debouncedValue,
-          companyId,
-        })
-      );
+      if (scope === "members") {
+        dispatch(
+          searchMembersThunk({
+            query: debouncedValue,
+            companyId,
+          })
+        );
+      } else {
+        dispatch(
+          searchUsersThunk({
+            query: debouncedValue,
+            companyId,
+          })
+        );
+      }
     } else {
       dispatch(clearUserSearch());
     }
-  }, [debouncedValue, companyId, dispatch]);
+  }, [debouncedValue, companyId, scope, dispatch]);
 
-  // cleanup on unmount
   useEffect(() => {
     return () => {
       dispatch(clearUserSearch());

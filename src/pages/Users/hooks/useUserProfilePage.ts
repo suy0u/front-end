@@ -19,6 +19,7 @@ import { logout } from "../../../store/slices/authSlice";
 
 import type { EditUserData, UpdateUserPayload } from "../../../types/user";
 import type { LeaveCompanyState } from "../../../types/membership";
+import type { ListModalType } from "../../../types/common";
 
 const emptyEditData: EditUserData = {
   username: "",
@@ -41,6 +42,7 @@ export function useUserProfilePage(id?: string) {
   const [editData, setEditData] = useState<EditUserData>(emptyEditData);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [companyToLeave, setCompanyToLeave] = useState<LeaveCompanyState>(null);
+  const [listModal, setListModal] = useState<ListModalType>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -123,6 +125,7 @@ export function useUserProfilePage(id?: string) {
     editData,
     isDeleteModalOpen,
     companyToLeave,
+    listModal,
 
     actions: {
       startEdit,
@@ -135,6 +138,7 @@ export function useUserProfilePage(id?: string) {
       setEditData,
       setIsDeleteModalOpen,
       setCompanyToLeave,
+      setListModal,
     },
   };
 }

@@ -5,6 +5,7 @@ import usersReducer from "./slices/userSlice.ts";
 import companiesReducer from "./slices/companySlice.ts";
 import membershipReducer from "./slices/membershipSlice.ts";
 import quizReducer from "./slices/quizSlice.ts";
+import analyticsReducer from "./slices/analyticsSlice.ts";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     companies: companiesReducer,
     membership: membershipReducer,
     quiz: quizReducer,
+    analytics: analyticsReducer,
   },
 });
 

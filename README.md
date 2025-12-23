@@ -109,3 +109,9 @@ Current examples
 
 ![Log In](public/sign_in.png)
 ![Register](public/sign_up.png)
+
+### Analytics
+
+![User](public/user_analytics_1.png)
+![User](public/user_analytics_2.png)
+![Company](public/company_analytics.png)

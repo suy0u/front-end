@@ -1,4 +1,9 @@
-import { createSlice, isPending, isRejectedWithValue } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  isPending,
+  isRejectedWithValue,
+  isAnyOf,
+} from "@reduxjs/toolkit";
 import type { User } from "../../types/user";
 import {
   fetchUsers,
@@ -7,6 +12,7 @@ import {
   deleteUserThunk,
   uploadAvatarThunk,
   searchUsersThunk,
+  searchMembersThunk,
 } from "../thunks/userThunks";
 
 interface UserState {
@@ -42,6 +48,8 @@ const userThunks = [
   deleteUserThunk,
   uploadAvatarThunk,
 ] as const;
+
+const searchThunks = [searchUsersThunk, searchMembersThunk] as const;
 
 const usersSlice = createSlice({
   name: "users",
@@ -93,14 +101,20 @@ const usersSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
       })
-      .addCase(searchUsersThunk.pending, (state) => {
+
+      .addMatcher(isPending(...searchThunks), (state) => {
         state.searchLoading = true;
       })
-      .addCase(searchUsersThunk.fulfilled, (state, action) => {
-        state.searchLoading = false;
-        state.search = Array.isArray(action.payload) ? action.payload : [];
-      })
-      .addCase(searchUsersThunk.rejected, (state) => {
+
+      .addMatcher(
+        isAnyOf(...searchThunks.map((t) => t.fulfilled)),
+        (state, action) => {
+          state.searchLoading = false;
+          state.search = action.payload ?? [];
+        }
+      )
+
+      .addMatcher(isAnyOf(...searchThunks.map((t) => t.rejected)), (state) => {
         state.searchLoading = false;
       })
 
