@@ -55,9 +55,11 @@ export default function UserProfileHeader({
             }
           />
         </Grid>
-        <Grid size={{ md: 8 }}>
-          <UserProfileAnalytics isSelf={isSelf} />
-        </Grid>
+        {isSelf && (
+          <Grid size={{ md: 8 }}>
+            <UserProfileAnalytics isSelf={isSelf} />
+          </Grid>
+        )}
       </Grid>
 
       <Box sx={{ mt: 6 }}>
