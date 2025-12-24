@@ -24,6 +24,7 @@ export default function AppModal({
       maxWidth="md"
       slotProps={{
         paper: {
+          onClick: (e: React.MouseEvent) => e.stopPropagation(),
           sx: {
             borderRadius: "32px",
             backgroundColor: "#F9F9F5",
