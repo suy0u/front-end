@@ -50,16 +50,6 @@ export function useCompanyProfilePage(id?: string) {
   );
   const companyId = useMemo(() => company?.id ?? null, [company]);
 
-  const {
-    userQuizScores,
-    companyLastAttempts,
-    loading: analyticsLoading,
-  } = useCompanyAnalyticsPage(
-    companyId ?? null,
-    selectedUserId ?? null,
-    dateRange
-  );
-
   useEffect(() => {
     if (!id) return;
 
@@ -67,7 +57,6 @@ export function useCompanyProfilePage(id?: string) {
     dispatch(fetchMyCompanies());
     dispatch(fetchMyRequests({ page: 1, size: 10 }));
     dispatch(fetchMyInvitations({ page: 1, size: 10 }));
-    dispatch(listQuizzesThunk({ companyId: id }));
 
     return () => {
       dispatch(clearCompany());
@@ -77,6 +66,24 @@ export function useCompanyProfilePage(id?: string) {
   const myMembership: MyCompany | undefined = useMemo(
     () => myCompanies.find((c) => c.company_id === id),
     [myCompanies, id]
+  );
+
+  useEffect(() => {
+    if (!id) return;
+    if (!myMembership) return;
+
+    dispatch(listQuizzesThunk({ companyId: id }));
+  }, [dispatch, id, myMembership]);
+
+  const {
+    userQuizScores,
+    companyLastAttempts,
+    loading: analyticsLoading,
+  } = useCompanyAnalyticsPage(
+    companyId ?? null,
+    selectedUserId ?? null,
+    dateRange,
+    myMembership ?? null
   );
 
   const role = myMembership?.role;

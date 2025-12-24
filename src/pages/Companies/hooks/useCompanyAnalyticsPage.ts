@@ -5,11 +5,13 @@ import {
   getCompanyUsersLastAttemptsThunk,
 } from "../../../store/thunks/analyticsThunks";
 import type { DateRangeParams } from "../../../types/analytics";
+import type { MyCompany } from "../../../types/company";
 
 export function useCompanyAnalyticsPage(
   companyId: string | null,
   userId: string | null,
-  dateRange: DateRangeParams | null
+  dateRange: DateRangeParams | null,
+  myMembership: MyCompany | null
 ) {
   const dispatch = useAppDispatch();
 
@@ -17,7 +19,7 @@ export function useCompanyAnalyticsPage(
     useAppSelector((s) => s.analytics);
 
   useEffect(() => {
-    if (!companyId || !userId || !dateRange) return;
+    if (!companyId || !userId || !dateRange || !myMembership) return;
 
     dispatch(
       getCompanyUserQuizScoresWeeklyThunk({
@@ -26,13 +28,14 @@ export function useCompanyAnalyticsPage(
         params: dateRange,
       })
     );
-  }, [dispatch, companyId, userId, dateRange]);
+  }, [dispatch, companyId, userId, dateRange, myMembership]);
 
   useEffect(() => {
     if (!companyId) return;
+    if (!myMembership) return;
 
     dispatch(getCompanyUsersLastAttemptsThunk({ companyId }));
-  }, [dispatch, companyId]);
+  }, [dispatch, companyId, myMembership]);
 
   return {
     userQuizScores: companyUserWeekly,
