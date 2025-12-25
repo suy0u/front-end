@@ -24,7 +24,6 @@ export default function UserCompaniesSection() {
   const handleLeave = (company: MyCompany) => {
     dispatch(setCompanyToLeave(company));
   };
-  console.log("Membership", membership);
 
   return (
     <Box sx={{ mt: 6 }}>

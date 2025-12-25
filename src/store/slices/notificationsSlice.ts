@@ -28,15 +28,10 @@ const notificationsSlice = createSlice({
   initialState,
   reducers: {
     addNotification(state, action: PayloadAction<Notification>) {
-      console.log("🟢 addNotification payload:", action.payload);
-
       state.items.unshift(action.payload);
 
       if (action.payload.status === MessageStatus.UNREAD) {
         state.unreadCount += 1;
-        console.log("🔔 unreadCount++", state.unreadCount);
-      } else {
-        console.warn("⚠️ notification is not UNREAD:", action.payload.status);
       }
     },
 
