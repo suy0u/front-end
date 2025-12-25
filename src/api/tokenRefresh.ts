@@ -1,58 +1,54 @@
+import type { Store } from "@reduxjs/toolkit";
+import type { RootState } from "../store/store";
+import type { RetryableRequest } from "../types/common";
 import api from "./axiosInstance";
-import { store } from "../store/store";
 import { logout, setTokens } from "../store/slices/authSlice";
 import { addRequestToQueue, processQueue } from "./requestQueue";
-import type { InternalAxiosRequestConfig } from "axios";
 
 let isRefreshing = false;
 
-export interface RetryableRequest extends InternalAxiosRequestConfig {
-  _retry?: boolean;
-}
+export const createTokenRefresher = (store: Store<RootState>) => {
+  return async (originalRequest: RetryableRequest) => {
+    const refreshToken = store.getState().auth.refreshToken;
 
-export const handleTokenRefresh = async (originalRequest: RetryableRequest) => {
-  const refreshToken = store.getState().auth.refreshToken;
+    if (!refreshToken) {
+      store.dispatch(logout());
+      window.location.href = "/login";
+      return Promise.reject("No refresh token");
+    }
 
-  if (!refreshToken) {
-    store.dispatch(logout());
-    window.location.href = "/login";
-    return Promise.reject("No refresh token");
-  }
+    if (isRefreshing) {
+      return new Promise<string>((resolve, reject) => {
+        addRequestToQueue(resolve, reject);
+      }).then((newToken) => {
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return api(originalRequest);
+      });
+    }
 
-  if (isRefreshing) {
-    return new Promise((resolve, reject) => {
-      addRequestToQueue(resolve, reject);
-    }).then((newToken) => {
-      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+    isRefreshing = true;
+
+    try {
+      const res = await api.post("/api/auth/refresh", null, {
+        params: { refresh_token: refreshToken },
+      });
+
+      const { access_token, refresh_token } = res.data;
+
+      store.dispatch(
+        setTokens({ access: access_token, refresh: refresh_token })
+      );
+      processQueue(null, access_token);
+
+      originalRequest.headers.Authorization = `Bearer ${access_token}`;
       return api(originalRequest);
-    });
-  }
-
-  isRefreshing = true;
-  originalRequest._retry = true;
-
-  try {
-    const res = await api.post("/api/auth/refresh", null, {
-      params: {
-        refresh_token: refreshToken,
-      },
-    });
-
-    const { access_token, refresh_token } = res.data;
-
-    store.dispatch(setTokens({ access: access_token, refresh: refresh_token }));
-
-    processQueue(null, access_token);
-    isRefreshing = false;
-
-    originalRequest.headers.Authorization = `Bearer ${access_token}`;
-    return api(originalRequest);
-  } catch (err) {
-    processQueue(err, null);
-    isRefreshing = false;
-
-    store.dispatch(logout());
-    window.location.href = "/login";
-    return Promise.reject(err);
-  }
+    } catch (err) {
+      processQueue(err, null);
+      store.dispatch(logout());
+      window.location.href = "/login";
+      return Promise.reject(err);
+    } finally {
+      isRefreshing = false;
+    }
+  };
 };
