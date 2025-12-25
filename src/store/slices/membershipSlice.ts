@@ -3,6 +3,7 @@ import {
   isPending,
   isFulfilled,
   isRejectedWithValue,
+  type PayloadAction,
 } from "@reduxjs/toolkit";
 
 import type { MyCompany } from "../../types/company";
@@ -10,6 +11,7 @@ import type {
   CompanyInvitation,
   CompanyJoinRequest,
   CompanyMember,
+  LeaveCompanyState,
 } from "../../types/membership";
 
 import {
@@ -44,6 +46,8 @@ export interface MembershipState extends PaginationState {
   companyInvitations: CompanyInvitation[];
   companyRequests: CompanyJoinRequest[];
 
+  companyToLeave: LeaveCompanyState;
+
   loading: boolean;
   error: string | null;
 }
@@ -56,6 +60,8 @@ const initialState: MembershipState = {
   companyMembers: [],
   companyInvitations: [],
   companyRequests: [],
+
+  companyToLeave: null,
 
   page: 1,
   size: 20,
@@ -111,6 +117,9 @@ const membershipSlice = createSlice({
 
       state.loading = false;
       state.error = null;
+    },
+    setCompanyToLeave(state, action: PayloadAction<LeaveCompanyState | null>) {
+      state.companyToLeave = action.payload;
     },
   },
 
@@ -205,7 +214,7 @@ const membershipSlice = createSlice({
   },
 });
 
-export const { clearCompanyMembership, clearMembership } =
+export const { clearCompanyMembership, clearMembership, setCompanyToLeave } =
   membershipSlice.actions;
 
 export default membershipSlice.reducer;

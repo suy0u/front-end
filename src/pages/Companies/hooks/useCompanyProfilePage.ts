@@ -19,6 +19,7 @@ import type { ListModalType } from "../../../types/common";
 import type { User } from "../../../types/user";
 import type { DateRangeParams } from "../../../types/analytics";
 import { useCompanyAnalyticsPage } from "./useCompanyAnalyticsPage";
+import { openModal } from "../../../store/slices/uiSlice";
 
 const ROLE: Record<CompanyRole, CompanyRole> = {
   OWNER: "OWNER",
@@ -38,7 +39,6 @@ export function useCompanyProfilePage(id?: string) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCreateQuizOpen, setIsCreateQuizOpen] = useState(false);
   const [companyToLeave, setCompanyToLeave] = useState<LeaveCompanyState>(null);
-  const [listModal, setListModal] = useState<ListModalType>(null);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [dateRange, setDateRange] = useState<DateRangeParams>({
     preset: "week",
@@ -110,6 +110,21 @@ export function useCompanyProfilePage(id?: string) {
     setIsCreateQuizOpen(false);
   }, [dispatch, id]);
 
+  const openListModal = useCallback(
+    (type: ListModalType) => {
+      dispatch(
+        openModal({
+          type,
+          payload: {
+            companyId: id,
+            isOwner: canManageQuizzes,
+          },
+        })
+      );
+    },
+    [dispatch, id, canManageQuizzes]
+  );
+
   return {
     company,
     loading,
@@ -134,7 +149,6 @@ export function useCompanyProfilePage(id?: string) {
     isDeleteModalOpen,
     isCreateQuizOpen,
     companyToLeave,
-    listModal,
 
     actions: {
       setSelectedUsers,
@@ -145,7 +159,7 @@ export function useCompanyProfilePage(id?: string) {
       setCompanyToLeave,
       confirmLeaveCompany,
       onQuizCreated,
-      setListModal,
+      openListModal,
     },
   };
 }

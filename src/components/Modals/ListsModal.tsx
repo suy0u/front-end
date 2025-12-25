@@ -9,19 +9,17 @@ import UserCompaniesSection from "../UserPages/UserCompaniesSection";
 import { UserInvitationsList } from "../UserPages/UserInvitationsList";
 import { UserRequestsList } from "../UserPages/UserRequestsList";
 
-import type { MembershipState } from "../../store/slices/membershipSlice";
-import type { MyCompany } from "../../types/company";
 import { CompanyQuizzesList } from "../CompanyPages/CompanyQuizzesList";
 
+import { NotificationsList } from "../Notifications/NotificationsList";
+
+import { ListModal } from "../../types/common";
 interface Props {
   open: boolean;
-  type: ListModalType;
+  type: ListModalType | null;
 
   companyId?: string;
   isOwner?: boolean;
-
-  membership?: MembershipState;
-  onLeaveClick?: (company: MyCompany) => void;
 
   onClose: () => void;
 }
@@ -31,8 +29,6 @@ export default function ListsModal({
   type,
   companyId,
   isOwner,
-  membership,
-  onLeaveClick,
   onClose,
 }: Props) {
   if (!type) return null;
@@ -45,36 +41,34 @@ export default function ListsModal({
     user_invitations: "My invitations",
     user_requests: "My requests",
     company_quizzes: "Company Quizzes",
+    notifications: "Notifications",
   };
 
   return (
     <AppModal open={open} title={titleMap[type]} onClose={onClose}>
-      {type === "company_members" && companyId && (
+      {type === ListModal.CompanyMembers && companyId && (
         <CompanyMembersList companyId={companyId} isOwner={!!isOwner} />
       )}
 
-      {type === "company_invitations" && companyId && (
+      {type === ListModal.CompanyInvitations && companyId && (
         <CompanyInvitationsList companyId={companyId} />
       )}
 
-      {type === "company_requests" && companyId && (
+      {type === ListModal.CompanyRequests && companyId && (
         <CompanyRequestsList companyId={companyId} />
       )}
 
-      {type === "user_companies" && membership && onLeaveClick && (
-        <UserCompaniesSection
-          membership={membership}
-          onLeaveClick={onLeaveClick}
-        />
-      )}
+      {type === ListModal.UserCompanies && <UserCompaniesSection />}
 
-      {type === "user_invitations" && <UserInvitationsList />}
+      {type === ListModal.UserInvitations && <UserInvitationsList />}
 
-      {type === "user_requests" && <UserRequestsList />}
+      {type === ListModal.UserRequests && <UserRequestsList />}
 
-      {type === "company_quizzes" && companyId && (
+      {type === ListModal.CompanyQuizzes && companyId && (
         <CompanyQuizzesList companyId={companyId} canManage={isOwner} />
       )}
+
+      {type === ListModal.Notifications && <NotificationsList />}
     </AppModal>
   );
 }

@@ -1,3 +1,4 @@
+import type { InternalAxiosRequestConfig } from "axios";
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;
@@ -15,12 +16,19 @@ export interface PaginationState {
   total: number;
 }
 
-export type ListModalType =
-  | "company_members"
-  | "company_invitations"
-  | "company_requests"
-  | "user_companies"
-  | "user_invitations"
-  | "user_requests"
-  | "company_quizzes"
-  | null;
+export const ListModal = {
+  CompanyMembers: "company_members",
+  CompanyInvitations: "company_invitations",
+  CompanyRequests: "company_requests",
+  UserCompanies: "user_companies",
+  UserInvitations: "user_invitations",
+  UserRequests: "user_requests",
+  CompanyQuizzes: "company_quizzes",
+  Notifications: "notifications",
+} as const;
+
+export type ListModalType = (typeof ListModal)[keyof typeof ListModal];
+
+export interface RetryableRequest extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}

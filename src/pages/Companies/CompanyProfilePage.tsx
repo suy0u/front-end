@@ -18,9 +18,9 @@ import { EditCompanyModal } from "../../components/Modals/EditCompanyModal";
 import { DeleteCompanyModal } from "../../components/Modals/DeleteCompanyModal";
 import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
 import CreateQuizModal from "../../components/Modals/Quiz/CreateQuizModal";
-import ListsModal from "../../components/Modals/ListsModal";
 
 import { useCompanyProfilePage } from "./hooks/useCompanyProfilePage";
+import { ListModal } from "../../types/common";
 
 export default function CompanyProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -49,7 +49,6 @@ export default function CompanyProfilePage() {
     isDeleteModalOpen,
     isCreateQuizOpen,
     companyToLeave,
-    listModal,
 
     actions,
   } = useCompanyProfilePage(id);
@@ -105,7 +104,7 @@ export default function CompanyProfilePage() {
               <Button
                 size="sm"
                 variant="mint"
-                onClick={() => actions.setListModal("company_quizzes")}
+                onClick={() => actions.openListModal(ListModal.CompanyQuizzes)}
               >
                 {t("quiz.list")}
               </Button>
@@ -120,7 +119,9 @@ export default function CompanyProfilePage() {
                 <Button
                   size="sm"
                   variant="blue"
-                  onClick={() => actions.setListModal("company_members")}
+                  onClick={() =>
+                    actions.openListModal(ListModal.CompanyMembers)
+                  }
                 >
                   Members
                 </Button>
@@ -128,7 +129,9 @@ export default function CompanyProfilePage() {
                 <Button
                   size="sm"
                   variant="blue"
-                  onClick={() => actions.setListModal("company_invitations")}
+                  onClick={() =>
+                    actions.openListModal(ListModal.CompanyInvitations)
+                  }
                 >
                   Invitations
                 </Button>
@@ -136,7 +139,9 @@ export default function CompanyProfilePage() {
                 <Button
                   size="sm"
                   variant="blue"
-                  onClick={() => actions.setListModal("company_requests")}
+                  onClick={() =>
+                    actions.openListModal(ListModal.CompanyRequests)
+                  }
                 >
                   Requests
                 </Button>
@@ -178,13 +183,6 @@ export default function CompanyProfilePage() {
           />
         </>
       )}
-      <ListsModal
-        open={!!listModal}
-        type={listModal}
-        companyId={company.id}
-        isOwner={canManageQuizzes}
-        onClose={() => actions.setListModal(null)}
-      />
 
       {canLeave && (
         <LeaveCompanyModal
