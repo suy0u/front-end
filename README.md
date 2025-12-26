@@ -84,6 +84,25 @@ http://localhost:5173
 
 (or the port shown in terminal)
 
+## Tests
+
+Run all tests
+
+```bash
+npm run test
+```
+
+$${\color{lightgreen}Result}$$
+
+$\color{lightgreen}\small{\textbf{PASS}}$ src/tests/quizSlice.test.ts  
+$\color{lightgreen}\small{\textbf{PASS}}$ src/tests/useQuizPage.test.ts  
+$\color{lightgreen}\small{\textbf{PASS}}$ src/tests/QuizPage.test.tsx
+
+---
+
+Test Suites: $\color{lightgreen}\small{\textbf{3 passed}}$, 3 total  
+Tests: $\color{lightgreen}\small{\textbf{10 passed}}$, 10 total
+
 ---
 
 Current examples
