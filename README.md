@@ -105,7 +105,7 @@ Tests: $\color{lightgreen}\small{\textbf{10 passed}}$, 10 total
 
 ---
 
-# AWS Deploy
+# AWS Deploy [DEMO](https://d12qdpj2fs00yu.cloudfront.net)
 
 📦 Prerequisites
 
