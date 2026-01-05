@@ -7,6 +7,9 @@ import membershipReducer from "./slices/membershipSlice.ts";
 import quizReducer from "./slices/quizSlice.ts";
 import analyticsReducer from "./slices/analyticsSlice.ts";
 import exportReducer from "./slices/exportSlice.ts";
+import notificationsReducer from "./slices/notificationsSlice.ts";
+import uiReducer from "./slices/uiSlice.ts";
+import toastReducer from "./slices/toastSlice.ts";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +21,9 @@ export const store = configureStore({
     quiz: quizReducer,
     analytics: analyticsReducer,
     export: exportReducer,
+    notifications: notificationsReducer,
+    ui: uiReducer,
+    toast: toastReducer,
   },
 });
 

@@ -103,6 +103,18 @@ export const theme = createTheme({
             boxShadow: "0px 10px 30px rgba(0,0,0,0.1)",
           }),
         },
+        {
+          props: { variant: "toast" },
+          style: {
+            padding: 16,
+            borderRadius: 12,
+            backgroundColor: "#FFFCA8",
+            border: "3px solid #0B5A4A",
+            color: "#0B5A4A",
+            boxShadow: "4px 4px 0 #0B5A4A",
+            animation: "toastPop 0.3s ease-out",
+          },
+        },
       ],
     },
     MuiButton: {
@@ -328,6 +340,43 @@ export const theme = createTheme({
           },
         }),
       },
+      variants: [
+        {
+          props: { size: "notification" },
+          style: {
+            padding: 7,
+            width: "auto",
+            height: "auto",
+
+            "&:hover": {
+              backgroundColor: "transparent",
+            },
+
+            "& svg": {
+              fontSize: 20,
+            },
+          },
+        },
+        {
+          props: { size: "toastClose" },
+          style: {
+            padding: 4,
+            backgroundColor: "#FFFCA8",
+            color: "#0B5A4A",
+            borderRadius: "50%",
+            boxShadow: "none",
+            border: "none",
+
+            "&:hover": {
+              backgroundColor: "#FFFCA8",
+            },
+
+            "& svg": {
+              fontSize: 20,
+            },
+          },
+        },
+      ],
     },
     MuiChip: {
       styleOverrides: {

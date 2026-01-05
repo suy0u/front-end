@@ -6,23 +6,24 @@ import {
   Button,
   Chip,
 } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useTranslation } from "react-i18next";
+
 import { DataCard } from "../../components/Cards/DataCard";
 import { ExportQuizButton } from "../Common/ExportQuizButton";
 import { getRoleVariant } from "../../utils/companyChips";
+
+import { setCompanyToLeave } from "../../store/slices/membershipSlice";
+
 import type { MyCompany } from "../../types/company";
-import { type MembershipState } from "../../store/slices/membershipSlice";
 
-interface Props {
-  membership: MembershipState;
-  onLeaveClick: (company: MyCompany) => void;
-}
-
-export default function UserCompaniesSection({
-  membership,
-  onLeaveClick,
-}: Props) {
+export default function UserCompaniesSection() {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const membership = useAppSelector((s) => s.membership);
+  const handleLeave = (company: MyCompany) => {
+    dispatch(setCompanyToLeave(company));
+  };
 
   return (
     <Box sx={{ mt: 6 }}>
@@ -60,7 +61,7 @@ export default function UserCompaniesSection({
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      onLeaveClick(company);
+                      handleLeave(company);
                     }}
                   >
                     {t("actions.leave")}

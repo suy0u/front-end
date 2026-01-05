@@ -6,6 +6,7 @@ interface AuthState {
   token: string | null;
   refreshToken: string | null;
   user: AuthUser | null;
+  isAuthenticated: boolean;
   redirectAfterLogin: string | null;
 }
 
@@ -15,6 +16,7 @@ const initialState: AuthState = {
   token: localStorage.getItem("token"),
   refreshToken: localStorage.getItem("refreshToken"),
   user: storedUser ? JSON.parse(storedUser) : null,
+  isAuthenticated: Boolean(localStorage.getItem("token")),
   redirectAfterLogin: null,
 };
 
@@ -33,6 +35,7 @@ const authSlice = createSlice({
       state.token = action.payload.access;
       state.refreshToken = action.payload.refresh ?? null;
       state.user = action.payload.user ?? null;
+      state.isAuthenticated = true;
 
       localStorage.setItem("token", action.payload.access);
 
@@ -61,6 +64,8 @@ const authSlice = createSlice({
       state.token = null;
       state.refreshToken = null;
       state.user = null;
+
+      state.isAuthenticated = false;
 
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");

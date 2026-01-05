@@ -6,8 +6,11 @@ import "./i18n";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import { store } from "./store/store";
+import { setupInterceptors } from "./api/setupInterceptors";
 import { Provider } from "react-redux";
 import "./utils/Charts/chartSetup.ts";
+
+setupInterceptors(store);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

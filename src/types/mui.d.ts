@@ -76,6 +76,7 @@ declare module "@mui/material/Paper" {
     pageCard: true;
     manageCard: true;
     analyticsCard: true;
+    toast: true;
   }
 }
 
@@ -93,5 +94,11 @@ declare module "@mui/material/Chip" {
     sm: true;
     md: true;
     lg: true;
+  }
+}
+declare module "@mui/material/IconButton" {
+  interface IconButtonPropsSizeOverrides {
+    notification: true;
+    toastClose: true;
   }
 }

@@ -16,10 +16,10 @@ import { ManageCard } from "../../components/Cards/ManageCard";
 
 import DeleteAccountModal from "../../components/Modals/Users/DeleteAccountModal";
 import LeaveCompanyModal from "../../components/Modals/LeaveCompanyModal";
-import ListsModal from "../../components/Modals/ListsModal";
 
 import { useUserProfilePage } from "./hooks/useUserProfilePage";
 import { useUserProfileAnalytics } from "./hooks/useUserProfileAnalytics";
+import { ListModal } from "../../types/common";
 
 export default function UserProfilePage() {
   const { t } = useTranslation();
@@ -29,14 +29,12 @@ export default function UserProfilePage() {
     user,
     loading,
     error,
-    membership,
     isSelf,
 
     editMode,
     editData,
     isDeleteModalOpen,
     companyToLeave,
-    listModal,
 
     actions,
   } = useUserProfilePage(id);
@@ -81,7 +79,7 @@ export default function UserProfilePage() {
                 <Button
                   size="sm"
                   variant="blue"
-                  onClick={() => actions.setListModal("user_companies")}
+                  onClick={() => actions.openListModal(ListModal.UserCompanies)}
                 >
                   My Companies
                 </Button>
@@ -89,7 +87,9 @@ export default function UserProfilePage() {
                 <Button
                   size="sm"
                   variant="blue"
-                  onClick={() => actions.setListModal("user_invitations")}
+                  onClick={() =>
+                    actions.openListModal(ListModal.UserInvitations)
+                  }
                 >
                   Invitations
                 </Button>
@@ -97,7 +97,7 @@ export default function UserProfilePage() {
                 <Button
                   size="sm"
                   variant="blue"
-                  onClick={() => actions.setListModal("user_requests")}
+                  onClick={() => actions.openListModal(ListModal.UserRequests)}
                 >
                   Requests
                 </Button>
@@ -110,14 +110,6 @@ export default function UserProfilePage() {
           </Box>
         </>
       )}
-
-      <ListsModal
-        open={!!listModal}
-        type={listModal}
-        membership={membership}
-        onLeaveClick={actions.setCompanyToLeave}
-        onClose={() => actions.setListModal(null)}
-      />
 
       <DeleteAccountModal
         open={isDeleteModalOpen}

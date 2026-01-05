@@ -19,6 +19,7 @@ import type { ListModalType } from "../../../types/common";
 import type { User } from "../../../types/user";
 import type { DateRangeParams } from "../../../types/analytics";
 import { useCompanyAnalyticsPage } from "./useCompanyAnalyticsPage";
+import { openModal } from "../../../store/slices/uiSlice";
 
 const ROLE: Record<CompanyRole, CompanyRole> = {
   OWNER: "OWNER",
@@ -38,7 +39,6 @@ export function useCompanyProfilePage(id?: string) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCreateQuizOpen, setIsCreateQuizOpen] = useState(false);
   const [companyToLeave, setCompanyToLeave] = useState<LeaveCompanyState>(null);
-  const [listModal, setListModal] = useState<ListModalType>(null);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [dateRange, setDateRange] = useState<DateRangeParams>({
     preset: "week",
@@ -50,16 +50,6 @@ export function useCompanyProfilePage(id?: string) {
   );
   const companyId = useMemo(() => company?.id ?? null, [company]);
 
-  const {
-    userQuizScores,
-    companyLastAttempts,
-    loading: analyticsLoading,
-  } = useCompanyAnalyticsPage(
-    companyId ?? null,
-    selectedUserId ?? null,
-    dateRange
-  );
-
   useEffect(() => {
     if (!id) return;
 
@@ -67,7 +57,6 @@ export function useCompanyProfilePage(id?: string) {
     dispatch(fetchMyCompanies());
     dispatch(fetchMyRequests({ page: 1, size: 10 }));
     dispatch(fetchMyInvitations({ page: 1, size: 10 }));
-    dispatch(listQuizzesThunk({ companyId: id }));
 
     return () => {
       dispatch(clearCompany());
@@ -77,6 +66,24 @@ export function useCompanyProfilePage(id?: string) {
   const myMembership: MyCompany | undefined = useMemo(
     () => myCompanies.find((c) => c.company_id === id),
     [myCompanies, id]
+  );
+
+  useEffect(() => {
+    if (!id) return;
+    if (!myMembership) return;
+
+    dispatch(listQuizzesThunk({ companyId: id }));
+  }, [dispatch, id, myMembership]);
+
+  const {
+    userQuizScores,
+    companyLastAttempts,
+    loading: analyticsLoading,
+  } = useCompanyAnalyticsPage(
+    companyId ?? null,
+    selectedUserId ?? null,
+    dateRange,
+    myMembership ?? null
   );
 
   const role = myMembership?.role;
@@ -103,6 +110,21 @@ export function useCompanyProfilePage(id?: string) {
     setIsCreateQuizOpen(false);
   }, [dispatch, id]);
 
+  const openListModal = useCallback(
+    (type: ListModalType) => {
+      dispatch(
+        openModal({
+          type,
+          payload: {
+            companyId: id,
+            isOwner: canManageQuizzes,
+          },
+        })
+      );
+    },
+    [dispatch, id, canManageQuizzes]
+  );
+
   return {
     company,
     loading,
@@ -127,7 +149,6 @@ export function useCompanyProfilePage(id?: string) {
     isDeleteModalOpen,
     isCreateQuizOpen,
     companyToLeave,
-    listModal,
 
     actions: {
       setSelectedUsers,
@@ -138,7 +159,7 @@ export function useCompanyProfilePage(id?: string) {
       setCompanyToLeave,
       confirmLeaveCompany,
       onQuizCreated,
-      setListModal,
+      openListModal,
     },
   };
 }
