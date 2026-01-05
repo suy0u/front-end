@@ -1,0 +1,39 @@
+{
+  "CallerReference": "meduzzen-frontend-001",
+  "Comment": "Meduzzen frontend distribution",
+  "Enabled": true,
+  "Origins": {
+    "Quantity": 1,
+    "Items": [
+      {
+        "Id": "S3Origin",
+        "DomainName": "my-first-meduzzen-frontend.s3-website.eu-central-1.amazonaws.com",
+        "CustomOriginConfig": {
+          "HTTPPort": 80,
+          "HTTPSPort": 443,
+          "OriginProtocolPolicy": "http-only"
+        }
+      }
+    ]
+  },
+  "DefaultCacheBehavior": {
+    "TargetOriginId": "S3Origin",
+    "ViewerProtocolPolicy": "redirect-to-https",
+    "AllowedMethods": {
+      "Quantity": 2,
+      "Items": ["GET", "HEAD"],
+      "CachedMethods": {
+        "Quantity": 2,
+        "Items": ["GET", "HEAD"]
+      }
+    },
+    "ForwardedValues": {
+      "QueryString": true,
+      "Cookies": { "Forward": "none" }
+    },
+    "MinTTL": 0
+  },
+  "DefaultRootObject": "index.html",
+  "PriceClass": "PriceClass_100"
+}
+
