@@ -103,7 +103,6 @@ $\color{lightgreen}\small{\textbf{PASS}}$ src/tests/QuizPage.test.tsx
 Test Suites: $\color{lightgreen}\small{\textbf{3 passed}}$, 3 total  
 Tests: $\color{lightgreen}\small{\textbf{10 passed}}$, 10 total
 
-<<<<<<< HEAD
 ---
 
 # AWS Deploy [DEMO](https://d12qdpj2fs00yu.cloudfront.net)
